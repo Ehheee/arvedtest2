@@ -1,0 +1,105 @@
+body{
+	background-color: #fff;
+}
+
+a{
+	font-size: 17px;
+	color: #000099;
+	text-decoration: none;
+}
+
+a:hover{
+	color: #000033;
+	text-decoration: underline;
+}
+div#userInfo{
+	float: right;
+	text-align: right;
+}
+
+div#headerLinks{
+	float: left;
+}
+
+div#headerContainer{
+	border: 1px solid #ccc;
+}
+
+div#objekt_muugiarved{
+	float: right;
+}
+
+div#objekt_ostuarved{
+	float: left;
+}
+
+.tabel {
+	border-width: 1px;
+	border-color: #000;
+}
+
+tr.tableRow{
+	background-color: #fff;
+}
+
+tr.tableRow:hover{
+	background-color: #ffffaa;
+}
+
+td {
+	border: 1px solid black;
+	padding: 1px;
+}
+input {
+	border: none;
+	padding: 1px;
+}
+
+.kuuPaev {
+	width: 88px;
+}
+
+
+.objekt{
+	
+	width: 110px;
+}
+.arveNumber{
+	width: 110px;
+}
+
+.summaKM{
+	width: 88px;
+}
+.summaILmaKM{
+	width: 105px;
+}
+
+.muugiMees{
+	width: 100px;	
+}
+.tarnija{
+	width: 100px;
+}
+.klient{
+	width: 100px;
+}
+
+.tasutud{
+	
+	width: 55px;
+}
+
+td.summaKM {
+	text-align: right;
+}
+
+td.summaIlmaKM {
+	text-align: right;
+}
+h4 {
+	margin: 30px;
+}
+h5 {
+	margin: 5px;
+}

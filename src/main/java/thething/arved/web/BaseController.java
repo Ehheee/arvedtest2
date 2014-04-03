@@ -1,0 +1,356 @@
+package thething.arved.web;
+
+import java.beans.PropertyEditorSupport;
+import java.io.File;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.StringTokenizer;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import thething.arved.dao.ArvedUserDao;
+import thething.arved.dataobjects.AbstractArve;
+import thething.arved.dataobjects.ArvedUser;
+import thething.arved.service.SecurityUser;
+import thething.arved.sqldao.ArvedFromDatabase;
+import thething.arved.utils.AbstractArvedFilter;
+import thething.arved.utils.AbstractArvedFilter.ArvedType;
+import thething.arved.utils.AbstractArvedFilter.Period;
+ 
+public class BaseController {
+
+	protected Log logger = LogFactory.getLog(getClass());
+	SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+	
+	
+	@InitBinder
+	protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception {
+		
+		binder.registerCustomEditor(BigDecimal.class,  new PropertyEditorSupport(){
+			public void setAsText(String text){
+				BigDecimal summa = null;
+				StringTokenizer st = new StringTokenizer(text, ",.");
+				if(st.countTokens() != 0){
+					BigDecimal base = new BigDecimal(st.nextToken());
+					if(st.hasMoreTokens()){
+						BigDecimal comma = new BigDecimal("0." + st.nextToken());
+						summa = base.add(comma);
+					}
+					setValue(summa);
+				}else{
+					setValue(new BigDecimal(0));
+				}
+			}
+		});
+		binder.registerCustomEditor(Boolean.class, new PropertyEditorSupport(){
+			
+			public void setAsText(String text){
+				if("on".equals("text")){
+					setValue(true);
+				}else{
+					setValue(Boolean.valueOf(text));
+				}
+				
+			}
+		});
+		CustomDateEditor editor = new CustomDateEditor(dateFormat, true);
+		binder.registerCustomEditor(Date.class, "kuuPaev", editor);
+		}
+	
+	
+	protected AbstractArvedFilter processRequest(HttpServletRequest request, HttpSession session){
+		AbstractArvedFilter filter = null;
+		Object f = session.getAttribute("arvedFilter");
+		if(f != null && f instanceof AbstractArvedFilter){
+			filter = (AbstractArvedFilter) f;
+		}else{
+			filter = new AbstractArvedFilter();
+		}
+		filter = filterFromRequest(request, filter);
+		return filter;
+		
+	}
+	
+	protected AbstractArvedFilter filterFromRequest(HttpServletRequest request, AbstractArvedFilter filter){
+		
+		try {
+			String startDate = request.getParameter("startDate");
+			String endDate = request.getParameter("endDate");
+			if(startDate != null && !"".equals(startDate)){
+				filter.setStartDate(dateFormat.parse(startDate));
+			}
+			if(endDate != null && !"".equals(endDate)){
+				filter.setEndDate(dateFormat.parse(endDate));
+			}
+		} catch (ParseException e) {
+			logger.warn(e.getStackTrace());
+			
+		}
+		if(request.getParameter("id") != null){
+		
+			filter.setId(Long.valueOf(request.getParameter("id")));
+			return filter;
+		}
+		
+		filter.setObjekt(request.getParameter("objekt"));
+		filter.setOrderBy(request.getParameter("orderBy"));
+		filter.setOrderHow(request.getParameter("orderHow"));
+		filter.setPeriod(Period.fromString(request.getParameter("period")));
+		
+		if(request.getParameter("page") != null){
+			filter.setPage(Integer.valueOf(request.getParameter("page")));
+		}
+		if(request.getParameter("tasutud") != null){
+			filter.setTasutud(Boolean.valueOf(request.getParameter("tasutud")));
+		}
+		//filter.setTypes(request.getParameterValues("type"));
+		
+		
+		
+		return filter;
+	}
+	
+	public void setDefaults(AbstractArvedFilter filter){
+		SecurityUser securityUser = (SecurityUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		ArvedUser user = securityUser.getUser();
+		
+		
+		if(filter.getPage() == null){
+			filter.setPage(0);
+		}if(filter.getPageSize() == null){
+			Integer pageSize = (user != null && user.getPageSize() != null) ? user.getPageSize() : 30;
+			filter.setPageSize(30);
+		}
+		if(filter.getOrderBy() == null){
+			String orderBy = "kuuPaev";
+			String orderHow = "DESC";
+			//TODO Get default order from user
+			filter.setOrderBy(orderBy);
+			filter.setOrderHow(orderHow);
+		}
+		
+	}
+	
+	protected void filterToModel(AbstractArvedFilter filter, Model model){
+		Map<ArvedType, List<AbstractArve>> arved = arvedFromDatabase.getArved(filter);
+		model.addAttribute("arved", arved);
+		List<ArvedType> types = filter.getTypes();
+		model.addAttribute("includedTypes", types);
+		for(ArvedType type: types){
+			if(arved.get(type) == null){
+				arved.put(type, Collections.<AbstractArve>emptyList());
+			}
+		}
+		model.addAttribute("filter", filter);
+	}
+	
+	protected AbstractArve insertArve(MultipartHttpServletRequest request){
+		this.printRequestparams(request.getParameterMap());
+		AbstractArve arve = null;
+		Long id = null;
+		try {
+			String i = request.getParameter("id");
+			if(i != null && !"".equals(i)){
+				logger.info("i: " + i);
+				id = Long.valueOf(i);
+			}
+			logger.info("id: " + id);
+			String objekt = request.getParameter("objekt");
+			String arveNumber = request.getParameter("arveNumber");
+			Date kuuPaev = dateFormat.parse(request.getParameter("kuuPaev"));
+			BigDecimal summaIlmaKM = new BigDecimal(request.getParameter("summaIlmaKM"));
+			BigDecimal summaKM = new BigDecimal(request.getParameter("summaKM"));
+			boolean tasutud = this.checkBoxToBoolean(request.getParameter("tasutud"));
+			logger.info("tasutud:" + tasutud);
+			String muugiMees = request.getParameter("muugiMees");
+			String klient = request.getParameter("klient");
+			String tarnija = request.getParameter("tarnija");
+			ArvedType arvedType = ArvedType.fromString(request.getParameter("arvedType"));
+			String pdfLocation = this.saveFile(request, arvedType);
+			if(id != null){
+				arve = arvedFromDatabase.getArve(id);
+				if(arve == null){
+					logger.warn("Trying to update id that doesn't exist");
+					arve = new AbstractArve();
+				}
+			
+				
+				
+			}else{
+				arve = new AbstractArve();
+			}
+			arve.setArveNumber(arveNumber);
+			arve.setKuuPaev(kuuPaev);
+			arve.setObjekt(objekt);
+			if(pdfLocation != null){
+				arve.setPdfLocation(pdfLocation);
+			}
+			arve.setSummaIlmaKM(summaIlmaKM);
+			arve.setSummaKM(summaKM);
+			arve.setTasutud(tasutud);
+			arve.setType(arvedType);
+			switch(arvedType){
+			case MUUGI:
+				arve.setMuugiMees(muugiMees);
+				arve.setKlient(klient);
+				break;
+			case OSTU:
+				arve.setTarnija(tarnija);
+				break;
+			}
+		} catch (Exception e) {
+			logger.error("Exception", e);
+		}
+		
+		
+		logger.info("made it here");
+		if(id != null){
+			logger.info("triggeredUpdate");
+			arvedFromDatabase.updateArve(arve);
+		}else{
+			id = arvedFromDatabase.insertArve(arve);
+			arve.setId(id);
+		}
+			
+			
+		
+		
+		
+		return arve;
+	}
+	/*
+	
+	protected void setDefaultDates(HttpSession session){
+		Calendar calendar =  Calendar.getInstance();
+		if(session.getAttribute("endDate") == null){
+			logger.info("set default endDate: " + calendar.getTime());
+			session.setAttribute("endDate", calendar.getTime());
+		}
+		if(session.getAttribute("startDate") == null){
+			logger.debug("startDate before roll: " + calendar);
+			calendar.roll(Calendar.YEAR, -1);
+			logger.debug("startDate after roll: " + calendar);
+			session.setAttribute(" set default startDate", calendar.getTime());
+		}
+		
+	}
+	*/
+		
+	
+	
+	
+	
+	protected String saveFile(MultipartHttpServletRequest request, ArvedType arvedType) {
+		String pdfLocation = null;
+		try{
+			MultipartFile uploadFile = request.getFile("pdf");
+			if(uploadFile == null){
+				return null;
+			}
+			String fileName = uploadFile.getOriginalFilename();
+			if(fileName == null || "".equals(fileName)){
+				return null;
+			}
+			String contextPath = servletContext.getRealPath("");
+			String saveTo = contextPath + "\\resources\\pdf\\" + arvedType.getIdentifier() + "\\" + fileName;
+			
+			pdfLocation = "/resources/pdf/" + arvedType.getIdentifier() + "/" +  fileName;
+			File file = new File(saveTo);
+			if(!file.exists()){
+				file.mkdirs();
+				uploadFile.transferTo(file);
+				
+			}
+			
+		}catch(Exception e){
+			logger.error("saving file filed: ",  e);
+			return pdfLocation;
+		}
+		
+		return pdfLocation;
+	}
+	
+	private void printRequestparams(Map<String, String[]> params){
+		for(Entry<String, String[]> e: params.entrySet()){
+			String key = e.getKey();
+			String[] value = e.getValue();
+			logger.info("key: " + key);
+			logger.info("value: " + value[0]);
+			
+		}
+	}
+	
+	private Boolean checkBoxToBoolean(String text){
+		if("on".equals(text)){
+			return true;
+		}else{
+			return Boolean.valueOf(text);
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@Autowired
+	protected ArvedFromDatabase arvedFromDatabase;
+	public ArvedFromDatabase getArvedFromDatabase() {
+		return arvedFromDatabase;
+	}
+
+	public void setArvedFromDatabase(ArvedFromDatabase arvedFromDatabase) {
+		this.arvedFromDatabase = arvedFromDatabase;
+	}
+
+	@Autowired
+	protected ServletContext servletContext;
+	public ServletContext getServletContext() {
+		return servletContext;
+	}
+	public void setServletContext(ServletContext servletContext) {
+		this.servletContext = servletContext;
+	}
+	
+	
+	
+	@Autowired
+	protected ArvedUserDao arvedUserDao;
+	public ArvedUserDao getArvedUserDao(){
+		return arvedUserDao;
+	}
+	
+	public void setArvedUserDao(ArvedUserDao arvedUserDao){
+		this.arvedUserDao = arvedUserDao;
+	}
+}
