@@ -42,11 +42,14 @@ function checkInput(toCheck){
 		key = $(this).attr("data-name");
 		console.log(key);
 		console.log(value);
-		if(key == "kuuPaev"){
+		if(key === "summaKM" || key === "summaIlmaKM"){
+			addSumma(key, value);
+		}
+		if(key === "kuuPaev"){
 			kuuPaev = $("input#" + type + "kuuPaev" + id).val();
 			console.log(kuuPaev);
 			formData.append(key, kuuPaev);
-		}else if(key == "tasutud"){
+		}else if(key === "tasutud"){
 			if($("input[data-id=" +id +"][data-name=tasutud]").is(":checked")){
 				console.log("on");
 				formData.append(key, "on");

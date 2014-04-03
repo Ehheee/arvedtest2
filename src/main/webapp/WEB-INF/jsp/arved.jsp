@@ -22,10 +22,15 @@
 				<c:forEach var = "arve" items = "${arved[type]}">
 					
 					<c:set var = "arve" value = "${arve }" scope = "request"></c:set>
+					<c:set scope = "request" var = "totalSummaKM" value = "${arve.summaKM + totalSummaKM }" />
+					<c:set scope = "request" var = "totalSummaIlmaKM" value = "${arve.summaIlmaKM + totalSummaIlmaKM }" />
 					<jsp:include page="arveRow.jsp"></jsp:include>
 				</c:forEach>
 				
-			
+		
+			<jsp:include page = "arvedFooterRow.jsp"></jsp:include>
+		
+		
 		</table>
 		<c:if test = "${filter.page gt 0}">
 			<c:url value = "" var="previousPage">

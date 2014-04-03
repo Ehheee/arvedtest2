@@ -18,6 +18,9 @@
 <script type="text/javascript" src="<c:url value='/resources/javascript/jquery/jquery-1.11.0.js' />"></script>
 <script type="text/javascript" src="<c:url value='/resources/javascript/jquery/anytime.5.0.1-1403131246.js' />"></script>
 
+
+
+<script type="text/javascript" src="<c:url value='/resources/javascript/utility.js' />" ></script>
 <script type="text/javascript" src="<c:url value='/resources/javascript/binders.js' />" /></script>
 <script type="text/javascript" src="<c:url value='/resources/javascript/init.js' />"></script>
 
