@@ -69,10 +69,14 @@ input {
 }
 
 .summaKM{
+	display: table;
 	width: 88px;
+	text-align: right;
 }
 .summaILmaKM{
+	display: table;
 	width: 105px;
+	text-align: right;
 }
 
 .muugiMees{
@@ -90,13 +94,7 @@ input {
 	width: 55px;
 }
 
-td.summaKM {
-	text-align: right;
-}
 
-td.summaIlmaKM {
-	text-align: right;
-}
 h4 {
 	margin: 30px;
 }

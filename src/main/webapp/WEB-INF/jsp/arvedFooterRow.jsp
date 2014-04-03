@@ -10,14 +10,14 @@
 	</td>
 	<td >
 	
-		<div  data-name = "totalSummaIlmaKM" class = "summaIlmaKM" >
+		<span  data-name = "totalSummaIlmaKM" class = "summaIlmaKM" >
 		${totalSummaIlmaKM}
-		</div>
+		</span>
 	</td>
 	<td >
-		<div data-name = "totalSummaKM" class = "summaKM"  >
+		<span data-name = "totalSummaKM" class = "summaKM"  >
 		${totalSummaKM }
-		</div>
+		</span>
 	</td>
 	
 </tr>

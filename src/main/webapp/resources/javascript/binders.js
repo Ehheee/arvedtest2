@@ -29,24 +29,19 @@ function bindEditable(toBind){
 
 function checkInput(toCheck){
 	console.log(toCheck);
-	div = $(toCheck);
-	id = div.attr("data-id");
-	text = div.text().trim();
-	type = $("#arveRow" + id).attr("data-type");
-	console.log(text);
+
+	var id = $(toCheck).attr("data-id");
+	var type = $("#arveRow" + id).attr("data-type");
 	console.log(id);
-	formData = new FormData();
-	dataDivs = $("[data-id="+ id +"]");
+	var formData = new FormData();
+	var dataDivs = $("[data-id="+ id +"]");
 	dataDivs.each(function(){
-		value = $(this).text().trim();
-		key = $(this).attr("data-name");
+		var value = $(this).text().trim();
+		var key = $(this).attr("data-name");
 		console.log(key);
 		console.log(value);
-		if(key === "summaKM" || key === "summaIlmaKM"){
-			addSumma(key, value);
-		}
 		if(key === "kuuPaev"){
-			kuuPaev = $("input#" + type + "kuuPaev" + id).val();
+			var kuuPaev = $("input#" + type + "kuuPaev" + id).val();
 			console.log(kuuPaev);
 			formData.append(key, kuuPaev);
 		}else if(key === "tasutud"){
@@ -61,12 +56,14 @@ function checkInput(toCheck){
 	});
 	console.log(type);
 	formData.append("arvedType", type);
-	kuuPaev = $("input#" + type + "kuuPaev" + id).val();
-	console.log(kuuPaev);
+
 	formData.append("id", id);
 	formData.append("js", true);
-	
+	var see = $(toCheck).attr("data-name");
+	console.log(see);
+	recalculateSumma(see);
 	sendArved(formSubmitUrl, formData, type, null);
+	
 }
 
 function bindDelete(toBind){
