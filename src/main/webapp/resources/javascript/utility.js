@@ -20,7 +20,7 @@ function recalculateSumma(summaType, arvedType){
 		console.log(see);
 		console.log("pass");
 		var number= see.text().trim();
-		number = parseInt(number, 10);
+		number = parseFloat(number, 10);
 		summa += number;
 		console.log(summa);
 		
