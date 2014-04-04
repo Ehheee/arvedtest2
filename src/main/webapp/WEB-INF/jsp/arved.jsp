@@ -6,12 +6,12 @@
 	<c:set var = "arvedSize" value = "${fn:length(arved[type]) }"></c:set>
 	<sec:authorize access="hasRole('ROLE_ADMIN')">
 		<c:set var = "arve" value = "${null }"></c:set>
-			<h5>Sisesta uus ${type}arve:</h5>
+			<h5>Sisesta uus ${type.description}arve:</h5>
 			<jsp:include page="arve.jsp"></jsp:include>
 		<c:set var = "editable" value = "true" scope = "request"></c:set>
 	</sec:authorize>
 	<c:if test="${arvedSize gt 0 }">
-		<h3>${type.description }:</h3>
+		<h3>${type.description }arved:</h3>
 		
 		
 		<table id = "${type.identifier}table">

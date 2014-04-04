@@ -16,12 +16,12 @@
 	</td>
 	<td >
 	
-		<div data-id = "${arve.id }" data-name = "summaIlmaKM" class = "editable summaIlmaKM" >
+		<div data-id = "${arve.id }" data-type = ${arve.type.identifier } data-name = "summaIlmaKM" class = "editable summaIlmaKM" >
 		${arve.summaIlmaKM}
 		</div>
 	</td>
 	<td >
-		<div data-id = "${arve.id }" data-name = "summaKM" class = "editable summaKM"  >
+		<div data-id = "${arve.id }" data-type = ${arve.type.identifier } data-name = "summaKM" class = "editable summaKM"  >
 		${arve.summaKM }
 		</div>
 	</td>

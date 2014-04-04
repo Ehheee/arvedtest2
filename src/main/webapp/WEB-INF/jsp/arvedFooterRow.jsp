@@ -10,12 +10,13 @@
 	</td>
 	<td >
 	
-		<span  data-name = "totalSummaIlmaKM" class = "summaIlmaKM" >
+		<span  data-name = "totalsummaIlmaKM" data-type = ${arve.type.identifier } class = "summaIlmaKM" >
 		${totalSummaIlmaKM}
 		</span>
 	</td>
 	<td >
-		<span data-name = "totalSummaKM" class = "summaKM"  >
+	
+		<span data-name = "totalsummaKM" data-type = ${arve.type.identifier } class = "summaKM"  >
 		${totalSummaKM }
 		</span>
 	</td>

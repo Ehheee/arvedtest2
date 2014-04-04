@@ -56,12 +56,16 @@ function checkInput(toCheck){
 	});
 	console.log(type);
 	formData.append("arvedType", type);
-
+	
 	formData.append("id", id);
 	formData.append("js", true);
+	/**
+	 * Add data-type to summarows. Use datatype + class to createsummas
+	 * 
+	 */
 	var see = $(toCheck).attr("data-name");
 	console.log(see);
-	recalculateSumma(see);
+	recalculateSumma(see, type);
 	sendArved(formSubmitUrl, formData, type, null);
 	
 }
@@ -114,6 +118,7 @@ function sendArved(formSubmitUrl, formData, type,  form){
 				  bindDelete(deleteButton);
 				  bindDeleteButtons();
 				  enableEditable();
+				  //recalculateSumma();
 				  form.trigger("reset");
 			  }
 		  }

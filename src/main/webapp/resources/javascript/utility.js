@@ -9,18 +9,26 @@ function addSumma(key, value){
 	
 }
 
-function recalculateSumma(type){
+function recalculateSumma(summaType, arvedType){
 	var summa = 0;
-	console.log("div." + type);
-	$("div." + type).each(function(){
+	console.log("div." + summaType + "[data-type=" + arvedType + "]");
+	var summad = $("div." + summaType + "[data-type=" + arvedType + "]");
+	console.log(summad);
+	$("div." + summaType + "[data-type=" + arvedType + "]").each(function(){
 		var see = $(this);
 		console.log(summa);
 		console.log(see);
-		console.log("pass")
-		summa += see.text();
+		console.log("pass");
+		var number= see.text().trim();
+		number = parseInt(number, 10);
+		summa += number;
 		console.log(summa);
+		
 	});
-	if(type === "summaKM"){
+	var span = $("span[data-name=total" + summaType + "][data-type=" + arvedType + "]");
+	console.log(span);
+	$("span[data-name=total" + summaType + "][data-type=" + arvedType + "]").text(summa);
+	if(arvedType === "summaKM"){
 		$("span.totalSummaKM").text(summa);
 	}
 }
