@@ -1,5 +1,12 @@
 <%@ include file="include.jsp"%>
-
+<c:choose>
+	<c:when test="${not empty arve.objekt }">
+		<c:set var = "objekt" value = "${arve.objekt }" />
+	</c:when>
+	<c:when test="${not empty filter.objekt }">
+		<c:set var = "objekt" value = "${filter.objekt }" />
+	</c:when>
+</c:choose>
 	<input type = "hidden" name = "arvedType" value = "${type.identifier }" />
 	<input type = "hidden" name = "id" value = "${arve.id }" />
 	<td>
@@ -18,7 +25,7 @@
 		<input type="text" name="summaKM" class="summaKM" value = "${arve.summaKM }" />
 	</td>
 	<td>
-		<input type="text" name="objekt"  class = "objekt" value = "${arve.objekt }" />
+		<input type="text" name="objekt"  class = "objekt" value = "${objekt }" />
 	</td>
 	
 	<c:if test = "${type == 'MUUGI' }">
