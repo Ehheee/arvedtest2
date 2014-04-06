@@ -9,6 +9,11 @@ function addSumma(key, value){
 	
 }
 
+function recalculateSummas(arvedType){
+	recalculateSumma("summaKM", arvedType);
+	recalculateSumma("summaIlmaKM", arvedType);
+}
+
 function recalculateSumma(summaType, arvedType){
 	var summa = 0;
 	
