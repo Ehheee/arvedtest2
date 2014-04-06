@@ -1,6 +1,6 @@
 <%@ include file="include.jsp"%>
 
-<tr id="arveRow${arve.id}"  data-type = ${arve.type.identifier } class = "tableRow">
+<tr id="arveRow${arve.id}"  data-type = "${arve.type.identifier }" class = "tableRow">
 	<td >
 		<div data-id = "${arve.id }" data-name = "arveNumber" class = "editable arveNumber"  >
 		${arve.arveNumber}

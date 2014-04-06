@@ -3,35 +3,27 @@
 
 
 <c:if test="${not empty type }">
+	
 	<c:set var = "arvedSize" value = "${fn:length(arved[type]) }"></c:set>
 	<sec:authorize access="hasRole('ROLE_ADMIN')">
 		<c:set var = "arve" value = "${null }"></c:set>
+			<h4>${type.description }arved:</h4>
 			<h5>Sisesta uus ${type.description}arve:</h5>
 			<jsp:include page="arve.jsp"></jsp:include>
+			<c:if test="${arvedSize lt 1 }">
+				<c:set scope = "request" var = "isHiddenTable" value = "hiddenTable" />
+				<jsp:include page="arvedTable.jsp" ></jsp:include>
+				<c:set scope = "request" var = "isHiddenTable" value = "${null }" />
+			</c:if>
 		<c:set var = "editable" value = "true" scope = "request"></c:set>
 	</sec:authorize>
 	<c:if test="${arvedSize gt 0 }">
-		<h3>${type.description }arved:</h3>
+		<c:set scope = "request" var = "totalSummaKM" value = "0" />
+		<c:set scope = "request" var = "totalSummaIlmaKM" value = "0" />
 		
 		
-		<table id = "${type.identifier}table">
-			
-				<sec:authorize access="hasRole('ROLE_USER')">	
-					<jsp:include page="arvedHeader.jsp"></jsp:include>
-				</sec:authorize>
-				<c:forEach var = "arve" items = "${arved[type]}">
-					
-					<c:set var = "arve" value = "${arve }" scope = "request"></c:set>
-					<c:set scope = "request" var = "totalSummaKM" value = "${arve.summaKM + totalSummaKM }" />
-					<c:set scope = "request" var = "totalSummaIlmaKM" value = "${arve.summaIlmaKM + totalSummaIlmaKM }" />
-					<jsp:include page="arveRow.jsp"></jsp:include>
-				</c:forEach>
-				
 		
-			<jsp:include page = "arvedFooterRow.jsp"></jsp:include>
-		
-		
-		</table>
+		<jsp:include page="arvedTable.jsp"></jsp:include>
 		<c:if test = "${filter.page gt 0}">
 			<c:url value = "" var="previousPage">
 				<c:param name="page" value = "${filter.page -1}"></c:param>

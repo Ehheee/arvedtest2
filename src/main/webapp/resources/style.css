@@ -38,6 +38,11 @@ div#objekt_ostuarved{
 	border-color: #000;
 }
 
+.hiddenTable {
+	
+	display: none;
+}
+
 tr.tableRow{
 	background-color: #fff;
 }

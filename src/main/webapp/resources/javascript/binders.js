@@ -118,6 +118,7 @@ function sendArved(formSubmitUrl, formData, type,  form){
 				  bindDelete(deleteButton);
 				  bindDeleteButtons();
 				  enableEditable();
+				  $(".hiddenTable").show();
 				  //recalculateSumma();
 				  form.trigger("reset");
 			  }

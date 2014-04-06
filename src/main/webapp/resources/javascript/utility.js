@@ -11,13 +11,10 @@ function addSumma(key, value){
 
 function recalculateSumma(summaType, arvedType){
 	var summa = 0;
-	console.log("div." + summaType + "[data-type=" + arvedType + "]");
-	var summad = $("div." + summaType + "[data-type=" + arvedType + "]");
-	console.log(summad);
+	
 	$("div." + summaType + "[data-type=" + arvedType + "]").each(function(){
 		var see = $(this);
-		console.log(summa);
-		console.log(see);
+
 		console.log("pass");
 		var number= see.text().trim();
 		number = parseFloat(number, 10);
@@ -25,10 +22,27 @@ function recalculateSumma(summaType, arvedType){
 		console.log(summa);
 		
 	});
-	var span = $("span[data-name=total" + summaType + "][data-type=" + arvedType + "]");
-	console.log(span);
+
 	$("span[data-name=total" + summaType + "][data-type=" + arvedType + "]").text(summa);
-	if(arvedType === "summaKM"){
-		$("span.totalSummaKM").text(summa);
+	recalculateKasum();
+}
+
+function recalculateKasum(){
+	var muugiSumma = parseFloat($("span[data-name=totalsummaIlmaKM][data-type=m]").text().trim());
+	var ostuSumma  = parseFloat($("span[data-name=totalsummaIlmaKM][data-type=o]").text().trim());
+	if(isNaN(muugiSumma)){
+		muugiSumma = 0;
 	}
+	if(isNaN(ostuSumma)){
+		ostuSumma = 0;
+	}
+	var kasum = muugiSumma - ostuSumma;
+	console.log(muugiSumma);
+	console.log(ostuSumma);
+	console.log(kasum);
+	if(!isNaN(kasum)){
+		$("span#objektKasum").text("Kasum: " + kasum);
+		
+	}
+	
 }
