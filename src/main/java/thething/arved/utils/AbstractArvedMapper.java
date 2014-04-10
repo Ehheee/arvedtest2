@@ -28,6 +28,7 @@ public class AbstractArvedMapper implements RowMapper<AbstractArve> {
 			arve.setKuuPaev(rs.getDate("kuuPaev"));
 			logger.info("halfway");
 			arve.setObjekt(rs.getString("objekt"));
+			logger.info("Mapped objekt to arve: " + arve.getObjekt());
 			arve.setPdfLocation(rs.getString("pdfLocation"));
 			arve.setTasutud(rs.getBoolean("tasutud"));
 			arve.setSummaIlmaKM(rs.getBigDecimal("summaIlmaKM"));

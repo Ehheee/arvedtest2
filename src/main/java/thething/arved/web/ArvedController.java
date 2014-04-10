@@ -76,6 +76,7 @@ public class ArvedController extends BaseController {
 	
 	@RequestMapping(value = "/ob/{objekt}", method = RequestMethod.GET)
 	public String getArvedByObjekt(@PathVariable("objekt") String objekt, HttpServletRequest request, HttpSession session, Model model){
+		logger.info("Requested objekt: " + objekt);
 		AbstractArvedFilter filter = this.processRequest(request, session);
 		this.setDefaults(filter);
 		filter.setObjekt(objekt);

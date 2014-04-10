@@ -22,7 +22,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 public class AbstractArvedFilter {
 	
 	public enum ArvedType{
-		MUUGI("m", "Müügi"), OSTU("o", "Ostu");
+		MUUGI("m", "MÃ¼Ã¼gi"), OSTU("o", "Ostu");
 		
 		private String identifier;
 		private String description;

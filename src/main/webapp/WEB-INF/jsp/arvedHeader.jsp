@@ -4,7 +4,7 @@
 		ArveNumber
 	</th>
 	<th>
-		Kuupäev
+		KuupÃ¤ev
 	</th>
 	<th>
 		SummaIlmaKM
@@ -18,7 +18,7 @@
 	
 	<c:if test = "${type == 'MUUGI' }">
 		<th>
-			Müügimees
+			MÃ¼Ã¼gimees
 		</th>
 		<th>
 			Klient

@@ -26,7 +26,7 @@
 	<bean id="dataSource"
 			class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost:3306/arvedtest2?useUnicode=true&amp;characterEncoding=UTF-8" />
+		<property name="url" value="jdbc:mysql://localhost:3306/arvedtest2?useUnicode=true&amp;characterEncoding=utf8" />
 		<property name="username" value="arvedtest2" />
 		<property name="password" value="f4k390fkf9" />
 		<property name="initialSize" value="2" />
