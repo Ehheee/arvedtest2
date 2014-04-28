@@ -276,7 +276,7 @@ public class BaseController {
 				return null;
 			}
 			String contextPath = servletContext.getRealPath("");
-			String saveTo = contextPath + "\\resources\\pdf\\" + arvedType.getIdentifier() + "\\" + fileName;
+			String saveTo = contextPath + File.separator + "resources" + File.separator + "pdf" + File.separator + arvedType.getIdentifier() + File.separator + fileName;
 			
 			pdfLocation = "/resources/pdf/" + arvedType.getIdentifier() + "/" +  fileName;
 			File file = new File(saveTo);

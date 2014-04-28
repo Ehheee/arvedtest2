@@ -36,7 +36,7 @@
 			<c:url value = "" var="nextPage">
 				<c:param name="page" value = "${filter.page +1}"></c:param>
 			</c:url>
-			<a href = "${nextPage }" >Järgmised</a>
+			<a href = "${nextPage }" >JÃ¤rgmised</a>
 		</c:if>
 	</c:if>
 </c:if>

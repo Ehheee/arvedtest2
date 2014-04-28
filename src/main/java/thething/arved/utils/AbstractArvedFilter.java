@@ -273,7 +273,7 @@ public class AbstractArvedFilter {
 		 */
 		if(page != null && pageSize != null){
 			
-			query = query + " limit " + (page*pageSize) + "," + (page*pageSize+pageSize+1) ;
+			query = query + " limit " + (page*pageSize) + "," + (pageSize+1) ;
 	
 		}
 		if(page == null && pageSize != null){

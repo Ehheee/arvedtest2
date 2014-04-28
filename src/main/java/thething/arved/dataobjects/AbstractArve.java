@@ -43,6 +43,28 @@ public class AbstractArve implements Comparable<AbstractArve>{
 	public ArvedType getType() {
 		return type;
 	}
+	public AbstractArve(long id, String objekt, String arveNumber,
+			Date kuuPaev, BigDecimal summaIlmaKM, BigDecimal summaKM,
+			boolean tasutud, String pdfLocation, String muugiMees,
+			String klient, String tarnija, ArvedType type) {
+		super();
+		this.id = id;
+		this.objekt = objekt;
+		this.arveNumber = arveNumber;
+		this.kuuPaev = kuuPaev;
+		this.summaIlmaKM = summaIlmaKM;
+		this.summaKM = summaKM;
+		this.tasutud = tasutud;
+		this.pdfLocation = pdfLocation;
+		this.muugiMees = muugiMees;
+		this.klient = klient;
+		this.tarnija = tarnija;
+		this.type = type;
+	}
+	
+	public AbstractArve() {
+		// TODO Auto-generated constructor stub
+	}
 	public void setType(ArvedType type) {
 		this.type = type;
 	}
