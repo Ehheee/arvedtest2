@@ -13,7 +13,7 @@
 
 <filter>  
     <filter-name>encodingFilter</filter-name>  
-    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>  
+    <filter-class>thething.arved.utils.CharsetFilter</filter-class>  
     <init-param>  
        <param-name>encoding</param-name>  
        <param-value>UTF-8</param-value>  
@@ -25,7 +25,7 @@
 </filter>  
 <filter-mapping>  
     <filter-name>encodingFilter</filter-name>  
-    <url-pattern>/*</url-pattern>  
+    <servlet-name>arvedtest2</servlet-name>
 </filter-mapping> 
 
    <filter>
@@ -36,7 +36,7 @@
   </filter>
   <filter-mapping>
     <filter-name>springSecurityFilterChain</filter-name>
-    <url-pattern>*</url-pattern>
+    <servlet-name>arvedtest2</servlet-name>
   </filter-mapping>
   
   <servlet>
