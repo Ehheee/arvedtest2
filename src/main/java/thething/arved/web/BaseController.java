@@ -91,6 +91,8 @@ public class BaseController {
 			filter = new AbstractArvedFilter();
 		}
 		filter = filterFromRequest(request, filter);
+		this.setDefaults(filter);
+		session.setAttribute("arvedFilter", filter);
 		return filter;
 		
 	}
@@ -116,9 +118,7 @@ public class BaseController {
 			return filter;
 		}
 		
-		filter.setObjekt(request.getParameter("objekt"));
-		filter.setOrderBy(request.getParameter("orderBy"));
-		filter.setOrderHow(request.getParameter("orderHow"));
+		this.setOrder(filter, request);
 		filter.setPeriod(Period.fromString(request.getParameter("period")));
 		
 		if(request.getParameter("page") != null){
@@ -127,11 +127,29 @@ public class BaseController {
 		if(request.getParameter("tasutud") != null){
 			filter.setTasutud(Boolean.valueOf(request.getParameter("tasutud")));
 		}
-		//filter.setTypes(request.getParameterValues("type"));
 		
+		//filter.setType(null);										//Currently both type and objekt are set to null as they should be taken from pathvariables
+		filter.setObjekt(null);
 		
 		
 		return filter;
+	}
+	
+	public void setOrder(AbstractArvedFilter filter, HttpServletRequest request){
+		String orderBy = request.getParameter("orderBy");
+		logger.info("setOrder: " + orderBy + "  " + filter.getOrderHow());
+		if(orderBy != null){
+			filter.setOrderBy(orderBy);
+			if("ASC".equals(filter.getOrderHow())){
+				filter.setOrderHow("DESC");
+			}else if( "DESC".equals(filter.getOrderHow())){
+				filter.setOrderHow("ASC");
+			}else{
+				filter.setOrderHow("DESC");
+			}
+			
+		}
+		
 	}
 	
 	public void setDefaults(AbstractArvedFilter filter){
@@ -155,6 +173,18 @@ public class BaseController {
 		
 	}
 	
+	
+	/**
+	 * Requests DAO for arved by filter and attaches them to given model.
+	 * If filter has set some types but type is not returned from database
+	 * because filter didn't match anything then we still have to add possibility
+	 * to insert new entry from jsp. In order for jsp to not throw error on checking 
+	 * list size then an empty list is added.
+	 * 
+	 * 
+	 * @param filter - created probably by controller or this.processRequest()
+	 * @param model
+	 */
 	protected void filterToModel(AbstractArvedFilter filter, Model model){
 		Map<ArvedType, List<AbstractArve>> arved = arvedFromDatabase.getArved(filter);
 		model.addAttribute("arved", arved);

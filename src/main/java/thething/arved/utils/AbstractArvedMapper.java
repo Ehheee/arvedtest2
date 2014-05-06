@@ -16,19 +16,15 @@ public class AbstractArvedMapper implements RowMapper<AbstractArve> {
 	protected Log logger = LogFactory.getLog(getClass());
 	
 	public AbstractArve mapRow(ResultSet rs, int arg1) throws SQLException {
-		logger.info("Started mapping");
 		AbstractArve arve = new AbstractArve();
 		try{
-			logger.info("type:" + rs.getString("type"));
 			ArvedType type = ArvedType.fromString(rs.getString("type"));
 			
 			arve.setArveNumber(rs.getString("arveNumber"));
 			arve.setId(rs.getLong("id"));
 			
 			arve.setKuuPaev(rs.getDate("kuuPaev"));
-			logger.info("halfway");
 			arve.setObjekt(rs.getString("objekt"));
-			logger.info("Mapped objekt to arve: " + arve.getObjekt());
 			arve.setPdfLocation(rs.getString("pdfLocation"));
 			arve.setTasutud(rs.getBoolean("tasutud"));
 			arve.setSummaIlmaKM(rs.getBigDecimal("summaIlmaKM"));

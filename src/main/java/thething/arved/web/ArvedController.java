@@ -25,7 +25,6 @@ public class ArvedController extends BaseController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String getArved(HttpServletRequest request, HttpSession session, Model model){
 		AbstractArvedFilter filter = this.processRequest(request, session);
-		this.setDefaults(filter);
 		this.filterToModel(filter, model);
 	
 		
@@ -60,7 +59,6 @@ public class ArvedController extends BaseController {
 	public String getArvedByType(@PathVariable("type") String type, HttpServletRequest request, HttpSession session, Model model){
 		logger.info("hit2???");
 		AbstractArvedFilter filter = this.processRequest(request, session);
-		this.setDefaults(filter);
 		ArvedType arvedType = ArvedType.fromString(type);
 		filter.setType(arvedType);
 		this.filterToModel(filter, model);
@@ -83,7 +81,6 @@ public class ArvedController extends BaseController {
 		}
 		*/
 		AbstractArvedFilter filter = this.processRequest(request, session);
-		this.setDefaults(filter);
 		filter.setObjekt(objekt);
 		this.filterToModel(filter, model);
 	
@@ -94,7 +91,6 @@ public class ArvedController extends BaseController {
 	public String getArvedByObjektAndType(@PathVariable("objekt") String objekt, @PathVariable("type") String type, HttpServletRequest request, HttpSession session, Model model){
 		
 		AbstractArvedFilter filter = this.processRequest(request, session);
-		this.setDefaults(filter);
 		ArvedType arvedType = ArvedType.fromString(type);
 		filter.setType(arvedType);
 		filter.setObjekt(objekt);

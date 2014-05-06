@@ -6,7 +6,7 @@
 	
 	<c:set var = "arvedSize" value = "${fn:length(arved[type]) }"></c:set>
 	<sec:authorize access="hasRole('ROLE_ADMIN')">
-		<c:set var = "arve" value = "${null }"></c:set>
+		<c:set var = "arve" value = "${null }"></c:set>						
 			<h4>${type.description }arved:</h4>
 			<h5>Sisesta uus ${type.description}arve:</h5>
 			<jsp:include page="arve.jsp"></jsp:include>
