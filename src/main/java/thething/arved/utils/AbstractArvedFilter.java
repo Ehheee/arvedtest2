@@ -41,6 +41,10 @@ public class AbstractArvedFilter {
 			return description;
 		}
 		
+		public List<ArvedType> getAllTypes(){
+			return allTypes;
+		}
+		
 		public String toString(){
 			return this.identifier;
 		}
@@ -69,10 +73,7 @@ public class AbstractArvedFilter {
 		}
 	}
 
-	protected Log logger = LogFactory.getLog(getClass());
-
-	private List<ArvedType> allTypes = Arrays.asList(ArvedType.values());
-	
+	protected Log logger = LogFactory.getLog(getClass());	
 	private List<ArvedType> types;
 	
 	private Long id;
@@ -132,11 +133,7 @@ public class AbstractArvedFilter {
 	public void setTypes(List<ArvedType> types) {
 		this.types = types;
 	}
-	public void setTypes(String[] types){
-		for(String t: types){
-			this.types.add(ArvedType.valueOf(t));
-		}
-	}
+
 	public Period getPeriod() {
 		return period;
 	}
@@ -182,7 +179,8 @@ public class AbstractArvedFilter {
 	private String createBaseQuery(){
 		String query = null;
 		if(this.types == null || this.types.size() == 0){
-			this.types = allTypes;
+			this.types = ArvedType.getAllTypes();
+			
 		}
 		query = this.selectArved;
 		if(this.paramSource == null){

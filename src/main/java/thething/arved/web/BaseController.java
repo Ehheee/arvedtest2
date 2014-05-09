@@ -128,9 +128,13 @@ public class BaseController {
 			filter.setTasutud(Boolean.valueOf(request.getParameter("tasutud")));
 		}
 		
-		//filter.setType(null);										//Currently both type and objekt are set to null as they should be taken from pathvariables
-		filter.setObjekt(null);
-		
+		/*
+		 * Currently both type and objekt are set to null as filter is taken from session and may contain types and objekts set previously
+		 * which are not set to null by more generic controllers. Type and objekt specific controllers will set those separately
+		 */
+		filter.setTypes(null);										
+		filter.setObjekt(null);										
+																	
 		
 		return filter;
 	}
