@@ -41,7 +41,7 @@ public class AbstractArvedFilter {
 			return description;
 		}
 		
-		public List<ArvedType> getAllTypes(){
+		public static List<ArvedType> getAllTypes(){
 			return allTypes;
 		}
 		
