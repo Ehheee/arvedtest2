@@ -51,7 +51,7 @@ public class AbstractArvedFilter {
 		
 		public static ArvedType fromString(String text){
 			for(ArvedType type: allTypes){
-				if(type.identifier.equals(text)){
+				if(type.identifier.equalsIgnoreCase(text)){
 					return type;
 				}
 			}
@@ -60,16 +60,25 @@ public class AbstractArvedFilter {
 	}
 	
 	public enum Period{
-		DAY, MONTH, YEAR, CURRENTMONTH, LASTMONTH;
+		DAY("day"), WEEK("week"), MONTH("month"), YEAR("year"), CURRENTMONTH("currentmonth"), LASTMONTH("lastmonth");
 		
+		private String identifier;
+		private static List<Period> allPeriods = Arrays.asList(Period.values());
 		
-		
+		Period(String identifier){
+			this.identifier = identifier;
+		}
+		public static List<Period> getAllPeriods(){
+			return allPeriods;
+		}
 		public static Period fromString(String text){
-			if(text != null && !"".equals(text)){
-				return Period.valueOf(text);
-			}else{
-				return null;
+			for(Period p: allPeriods){
+				
+				if(p.identifier.equalsIgnoreCase(text)){
+					return p;
+				}
 			}
+			return null;
 		}
 	}
 
@@ -220,14 +229,22 @@ public class AbstractArvedFilter {
 					calendar.roll(Calendar.MONTH, -1);
 					startDate = calendar.getTime();
 					break;
+					
 				case DAY:
 					calendar.roll(Calendar.DAY_OF_MONTH, -1);
 					startDate = calendar.getTime();
 					break;
+					
+				case WEEK:
+					calendar.roll(Calendar.WEEK_OF_YEAR, -1);
+					startDate = calendar.getTime();
+					break;
+					
 				case YEAR:
 					calendar.roll(Calendar.YEAR, -1);
 					startDate = calendar.getTime();
 					break;
+					
 				case CURRENTMONTH:
 					calendar.set(Calendar.HOUR_OF_DAY, 0);
 					calendar.set(Calendar.MINUTE, 0);
@@ -236,8 +253,8 @@ public class AbstractArvedFilter {
 					startDate = calendar.getTime();
 					calendar.roll(Calendar.MONTH, 1);
 					endDate = calendar.getTime();
-					
 					break;
+					
 				case LASTMONTH:
 					calendar.set(Calendar.HOUR_OF_DAY, 0);
 					calendar.set(Calendar.MINUTE, 0);
@@ -264,6 +281,7 @@ public class AbstractArvedFilter {
 			query += a + byTasutud;
 			paramSource.addValue("tasutud", tasutud);
 		}
+		
 		query = this.orderQuery(query);
 		
 		/**

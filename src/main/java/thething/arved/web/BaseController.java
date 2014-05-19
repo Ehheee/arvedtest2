@@ -123,6 +123,8 @@ public class BaseController {
 		
 		if(request.getParameter("page") != null){
 			filter.setPage(Integer.valueOf(request.getParameter("page")));
+		}else{
+			filter.setPage(0);
 		}
 		if(request.getParameter("tasutud") != null){
 			filter.setTasutud(Boolean.valueOf(request.getParameter("tasutud")));
