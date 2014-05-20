@@ -197,17 +197,149 @@ public class AbstractArvedFilter {
 			
 			
 		}
+		
+		return query;
+	}
+	
+	private String createFilterQuery(){
+		String query = createBaseQuery();
+		
+		if(id != null){
+			query = query + a + byId;
+			this.logMap(paramSource.getValues());
+			return query;
+		}
+		
+		if(objekt != null){
+			 query += a +  byObjekt;
+			 
+		}
+		
+		if(startDate != null){
+			query += a + byStartDate;
+			
+		}
+		if(startDate == null && period != null){
+			Calendar calendar = Calendar.getInstance();
+			switch(period){
+			
+				case MONTH:
+					calendar.roll(Calendar.MONTH, -1);
+					startDate = calendar.getTime();
+					break;
+					
+				case DAY:
+					calendar.roll(Calendar.DAY_OF_MONTH, -1);
+					startDate = calendar.getTime();
+					break;
+					
+				case WEEK:
+					calendar.roll(Calendar.WEEK_OF_YEAR, -1);
+					startDate = calendar.getTime();
+					break;
+					
+				case YEAR:
+					calendar.roll(Calendar.YEAR, -1);
+					startDate = calendar.getTime();
+					break;
+					
+				case CURRENTMONTH:
+					calendar.set(Calendar.HOUR_OF_DAY, 0);
+					calendar.set(Calendar.MINUTE, 0);
+					calendar.set(Calendar.SECOND, 0);
+					calendar.set(Calendar.DAY_OF_MONTH, 1);
+					startDate = calendar.getTime();
+					calendar.roll(Calendar.MONTH, 1);
+					endDate = calendar.getTime();
+					break;
+					
+				case LASTMONTH:
+					calendar.set(Calendar.HOUR_OF_DAY, 0);
+					calendar.set(Calendar.MINUTE, 0);
+					calendar.set(Calendar.SECOND, 0);
+					calendar.set(Calendar.DAY_OF_MONTH, 1);
+					calendar.roll(Calendar.MONTH, -1);
+					startDate = calendar.getTime();
+					calendar.roll(Calendar.MONTH, 1);
+					endDate = calendar.getTime();
+				
+			}
+		}
+		
+		
+		if(startDate != null ){
+			query += a + byStartDate;
+			
+		}
+		if(endDate != null){
+			query += a + byEndDate;
+			
+		}
+		if(tasutud != null){
+			query += a + byTasutud;
+			
+		}
+		
+		query = this.orderQuery(query);
+		
+		
+		if(page != null && pageSize != null){
+			
+			query = query + " limit " + (page*pageSize) + "," + (pageSize+1) ;
+	
+		}
+		if(page == null && pageSize != null){
+
+			query = query + " limit 0," + (pageSize +1);
+
+		}
+		return query;
+		
+		
+	}
+	private void fillParamSource(){
+		paramSource.addValue("id", id);
+		paramSource.addValue("objekt", objekt);
+		paramSource.addValue("startDate", startDate);
+		paramSource.addValue("endDate", endDate);
+		paramSource.addValue("tasutud", tasutud);
 		paramSource.addValue("types", types);
 		paramSource.registerSqlType("types", Types.VARCHAR);
-		return query;
+		logMap(paramSource.getValues());
 	}
 	
 	public String getQuery(){
 		String query = null;
+		if(objekt != null){
+			StringBuilder totalQuery = new StringBuilder();
+			for(int i = 0; i < ArvedType.getAllTypes().size(); i++){
+				this.setType(ArvedType.getAllTypes().get(i));
+				query = createFilterQuery();
+				query = "(" + query + ")";
+				totalQuery.append(query);
+				if(i + 1 < ArvedType.getAllTypes().size()){
+					totalQuery.append(union);
+				}
+			}
+			this.setTypes(ArvedType.getAllTypes());
+			for(ArvedType type: this.types){
+				logger.info(type);
+				
+			}
+			query = totalQuery.toString();
+		}else{
+			query = createFilterQuery();
+		}
+		fillParamSource();
+		query = query + ";";
+		logger.info(query);
+		return query;
+	}
+		/*
 		query = createBaseQuery();
 		
 		if(id != null){
-			query = query + a + this.byId;
+			query = query + a + byId;
 			paramSource.addValue("id", id);
 			this.logMap(paramSource.getValues());
 			return query;
@@ -283,10 +415,11 @@ public class AbstractArvedFilter {
 		}
 		
 		query = this.orderQuery(query);
-		
+		*/
 		/**
 		 * PageSize is increased so always +1 is displayed. -1 is deducted to check if next page link is necessary
 		 */
+		/*
 		if(page != null && pageSize != null){
 			
 			query = query + " limit " + (page*pageSize) + "," + (pageSize+1) ;
@@ -303,7 +436,8 @@ public class AbstractArvedFilter {
 	
 		query = query + ";";
 		return query;
-	}
+		*/
+	
 	
 
 	
@@ -374,15 +508,16 @@ public class AbstractArvedFilter {
 
 	private String selectArved = "select * from arved where type in (:types)";
 	
-	protected String a = " AND ";
+	private String a = " AND ";
+	private String union = " UNION ALL ";
 
 	
 	
-	protected String byId = "id = :id;";
+	private String byId = "id = :id";
 	
-	protected String byObjekt = "objekt = :objekt";
-	protected String byStartDate = "kuuPaev >= :startDate";
-	protected String byEndDate = "kuuPaev <= :endDate";
-	protected String byTasutud = "tasutud = :tasutud";
+	private String byObjekt = "objekt = :objekt";
+	private String byStartDate = "kuuPaev >= :startDate";
+	private String byEndDate = "kuuPaev <= :endDate";
+	private String byTasutud = "tasutud = :tasutud";
 	
 }

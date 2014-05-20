@@ -17,10 +17,20 @@ import thething.arved.utils.AbstractArvedFilter.Period;
 
 public class Main {
 
-	/**
-	 * @param args
-	 */
 	
+	public static void main(String[] args){
+		AbstractArvedFilter filter = new AbstractArvedFilter();
+		filter.setObjekt("ob");
+		filter.setPeriod(Period.CURRENTMONTH);
+		filter.setOrderBy("kuuPaev");
+		filter.setPage(2);
+		filter.setPageSize(30);
+		print(filter.getQuery());
+	}
+	
+	/*Convert old data to new database
+	 * 
+	 * 
 	private static String selectMA = "select ma.*, o.objekt_nimi as objekt from muugiarved ma left join objektid_muugiarved oma on ma.id=oma.muugiarve_id left join objektid o on o.id = oma.objekt_id " ;
 	private static String selectOA = "select oa.*, o.objekt_nimi as objekt from ostuarved oa left join objektid_ostuarved ooa on oa.id=ooa.ostuarve_id left join objektid o on o.id = ooa.objekt_id " ;
 	public static void main(String[] args) {
@@ -59,6 +69,7 @@ public class Main {
 			afd.insertArve(a);
 		}
 	}
+	*/
 	
 	
 	

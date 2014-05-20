@@ -47,6 +47,9 @@ public class ArvedFromDatabase {
 	public Map<ArvedType, List<AbstractArve>> getArved(AbstractArvedFilter filter){
 		Map<ArvedType, List<AbstractArve>> arved = null;
 		String query = filter.getQuery();
+		if(filter.getObjekt() != null && !"".equals(filter.getObjekt())){
+			
+		}
 		arved = this.namedParameterJdbcTemplate.query(query, filter.getParamSource(), extractor);
 		logger.info("Returned arved: " + arved.size());
 		return arved;
