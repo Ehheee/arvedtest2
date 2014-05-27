@@ -104,9 +104,13 @@ public class BaseController {
 			String endDate = request.getParameter("endDate");
 			if(startDate != null && !"".equals(startDate)){
 				filter.setStartDate(dateFormat.parse(startDate));
+			}else{
+				filter.setStartDate(null);
 			}
 			if(endDate != null && !"".equals(endDate)){
 				filter.setEndDate(dateFormat.parse(endDate));
+			}else{
+				filter.setEndDate(null);
 			}
 		} catch (ParseException e) {
 			logger.warn(e.getStackTrace());
@@ -120,6 +124,7 @@ public class BaseController {
 		
 		this.setOrder(filter, request);
 		filter.setPeriod(Period.fromString(request.getParameter("period")));
+		logger.info("Period: " + filter.getPeriod());
 		
 		if(request.getParameter("page") != null){
 			filter.setPage(Integer.valueOf(request.getParameter("page")));
