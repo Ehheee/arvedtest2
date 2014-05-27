@@ -185,24 +185,37 @@ public class AbstractArvedFilter {
 	public void setParamSource(MapSqlParameterSource paramSource) {
 		this.paramSource = paramSource;
 	}
-	private String createBaseQuery(){
+	private String createBaseQuery(ArvedType type){
 		String query = null;
-		if(this.types == null || this.types.size() == 0){
-			this.types = ArvedType.getAllTypes();
-			
-		}
-		query = this.selectArved;
 		if(this.paramSource == null){
 			paramSource = new MapSqlParameterSource();
-			
-			
 		}
+		
+		if(type != null){
+			query = createTypeQuery(type);
+		}else{
+			query = this.selectArved;
+			if(this.types == null || this.types.size() == 0){
+				this.types = ArvedType.getAllTypes();
+				
+			}
+		}
+		
+		
 		
 		return query;
 	}
 	
-	private String createFilterQuery(){
-		String query = createBaseQuery();
+	private String createTypeQuery(ArvedType type){
+		String paramKey = "type" + type.identifier;
+		String query = selectArvedByType + ":" + paramKey;
+		paramSource.addValue(paramKey, type.identifier);
+		return query;
+		
+	}
+	
+	private String createFilterQuery(ArvedType type){
+		String query = createBaseQuery(type);
 		
 		if(id != null){
 			query = query + a + byId;
@@ -308,27 +321,32 @@ public class AbstractArvedFilter {
 		logMap(paramSource.getValues());
 	}
 	
+	public String getQuery(ArvedType type){
+		String query = createFilterQuery(type);
+		fillParamSource();
+		query = query + ";";
+		logger.info(query);
+		return query;
+	}
+	
 	public String getQuery(){
 		String query = null;
+		
 		if(objekt != null){
 			StringBuilder totalQuery = new StringBuilder();
-			for(int i = 0; i < ArvedType.getAllTypes().size(); i++){
-				this.setType(ArvedType.getAllTypes().get(i));
-				query = createFilterQuery();
-				query = "(" + query + ")";
-				totalQuery.append(query);
-				if(i + 1 < ArvedType.getAllTypes().size()){
+			for(ArvedType type: ArvedType.getAllTypes()){
+				String subQuery = createFilterQuery(type);
+				subQuery = "(" + subQuery + ")";
+				totalQuery.append(subQuery);
+				if(ArvedType.getAllTypes().indexOf(type) < ArvedType.getAllTypes().size() - 1){
 					totalQuery.append(union);
 				}
 			}
-			this.setTypes(ArvedType.getAllTypes());
-			for(ArvedType type: this.types){
-				logger.info(type);
-				
-			}
 			query = totalQuery.toString();
+		
+		
 		}else{
-			query = createFilterQuery();
+			query = createFilterQuery(null);
 		}
 		fillParamSource();
 		query = query + ";";
@@ -442,47 +460,6 @@ public class AbstractArvedFilter {
 
 	
 	
-	/*
-	protected String getDefultsQuery(String select){
-		if(bindParams == null){
-			bindParams = new HashMap<String, Object>();
-		}
-		if(objekt != null){
-			 select += byObjekt;
-		}
-		if(startDate != null){
-			select += byStartDate;
-			bindParams.put("startDate", startDate);
-		}
-		if(endDate == null && period != null){
-			Calendar calendar = Calendar.getInstance();
-			switch(period){
-			
-				case MONTH:
-					calendar.roll(Calendar.MONTH, 1);
-				case DAY:
-					calendar.roll(Calendar.DAY_OF_MONTH, 1);
-				case YEAR:
-					calendar.roll(Calendar.YEAR, 1);
-				
-			}
-			endDate = calendar.getTime();
-		
-		}
-		if(endDate != null){
-			select += byEndDate;
-			bindParams.put("endDate", endDate);
-		}
-			
-		if(tasutud != null){
-			select += byTasutud;
-			bindParams.put("tasutud", tasutud);
-		}
-		logger.info("getDefaultsQuery: " + select);
-		return select;
-	}
-	
-	*/
 	
 	protected String orderQuery(String query){
 		if(orderBy != null){
@@ -506,18 +483,19 @@ public class AbstractArvedFilter {
 	
 
 
-	private String selectArved = "select * from arved where type in (:types)";
+	private String selectArved = 		"select * from arved where type in (:types)";
+	private String selectArvedByType = 	"select * from arved where type = ";
 	
-	private String a = " AND ";
-	private String union = " UNION ALL ";
+	private String a = 					" AND ";
+	private String union = 				" UNION ALL ";
 
 	
 	
-	private String byId = "id = :id";
+	private String byId = 				"id = :id";
 	
-	private String byObjekt = "objekt = :objekt";
-	private String byStartDate = "kuuPaev >= :startDate";
-	private String byEndDate = "kuuPaev <= :endDate";
-	private String byTasutud = "tasutud = :tasutud";
+	private String byObjekt = 			"objekt = :objekt";
+	private String byStartDate = 		"kuuPaev >= :startDate";
+	private String byEndDate = 			"kuuPaev <= :endDate";
+	private String byTasutud = 			"tasutud = :tasutud";
 	
 }
