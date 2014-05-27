@@ -321,18 +321,27 @@ public class AbstractArvedFilter {
 		logMap(paramSource.getValues());
 	}
 	
-	public String getQuery(ArvedType type){
-		String query = createFilterQuery(type);
-		fillParamSource();
-		query = query + ";";
-		logger.info(query);
-		return query;
+	public String getQuery(){
+		return getQuery(false);
 	}
 	
-	public String getQuery(){
+	public String getQuery(ArvedType type){
+		return getQuery(true, type);
+	}
+	
+	public String getQuery(boolean joinLimits){
+		return getQuery(joinLimits, null);
+	}
+	
+	
+	public String getQuery(boolean joinLimits, ArvedType t){
 		String query = null;
 		
-		if(objekt != null){
+		if(t != null){
+			query = createFilterQuery(t);
+
+		}
+		else if(!joinLimits){
 			StringBuilder totalQuery = new StringBuilder();
 			for(ArvedType type: ArvedType.getAllTypes()){
 				String subQuery = createFilterQuery(type);
@@ -353,109 +362,7 @@ public class AbstractArvedFilter {
 		logger.info(query);
 		return query;
 	}
-		/*
-		query = createBaseQuery();
-		
-		if(id != null){
-			query = query + a + byId;
-			paramSource.addValue("id", id);
-			this.logMap(paramSource.getValues());
-			return query;
-		}
-		
-		if(objekt != null){
-			 query += a +  byObjekt;
-			 paramSource.addValue("objekt", objekt);
-		}
-		if(startDate != null){
-			query += a + byStartDate;
-			paramSource.addValue("startDate", startDate);
-		}
-		if(startDate == null && period != null){
-			Calendar calendar = Calendar.getInstance();
-			switch(period){
-			
-				case MONTH:
-					calendar.roll(Calendar.MONTH, -1);
-					startDate = calendar.getTime();
-					break;
-					
-				case DAY:
-					calendar.roll(Calendar.DAY_OF_MONTH, -1);
-					startDate = calendar.getTime();
-					break;
-					
-				case WEEK:
-					calendar.roll(Calendar.WEEK_OF_YEAR, -1);
-					startDate = calendar.getTime();
-					break;
-					
-				case YEAR:
-					calendar.roll(Calendar.YEAR, -1);
-					startDate = calendar.getTime();
-					break;
-					
-				case CURRENTMONTH:
-					calendar.set(Calendar.HOUR_OF_DAY, 0);
-					calendar.set(Calendar.MINUTE, 0);
-					calendar.set(Calendar.SECOND, 0);
-					calendar.set(Calendar.DAY_OF_MONTH, 1);
-					startDate = calendar.getTime();
-					calendar.roll(Calendar.MONTH, 1);
-					endDate = calendar.getTime();
-					break;
-					
-				case LASTMONTH:
-					calendar.set(Calendar.HOUR_OF_DAY, 0);
-					calendar.set(Calendar.MINUTE, 0);
-					calendar.set(Calendar.SECOND, 0);
-					calendar.set(Calendar.DAY_OF_MONTH, 1);
-					calendar.roll(Calendar.MONTH, -1);
-					startDate = calendar.getTime();
-					calendar.roll(Calendar.MONTH, 1);
-					endDate = calendar.getTime();
-				
-			}
 
-		}
-		if(startDate != null ){
-			query += a + byStartDate;
-			paramSource.addValue("startDate", startDate);
-		}
-		if(endDate != null){
-			query += a + byEndDate;
-			paramSource.addValue("endDate", endDate);
-		}
-			
-		if(tasutud != null){
-			query += a + byTasutud;
-			paramSource.addValue("tasutud", tasutud);
-		}
-		
-		query = this.orderQuery(query);
-		*/
-		/**
-		 * PageSize is increased so always +1 is displayed. -1 is deducted to check if next page link is necessary
-		 */
-		/*
-		if(page != null && pageSize != null){
-			
-			query = query + " limit " + (page*pageSize) + "," + (pageSize+1) ;
-	
-		}
-		if(page == null && pageSize != null){
-
-			query = query + " limit 0," + (pageSize +1);
-
-		}
-		
-		logger.info("query: " + query);
-		this.logMap(paramSource.getValues());
-	
-		query = query + ";";
-		return query;
-		*/
-	
 	
 
 	
@@ -486,16 +393,17 @@ public class AbstractArvedFilter {
 	private String selectArved = 		"select * from arved where type in (:types)";
 	private String selectArvedByType = 	"select * from arved where type = ";
 	
+	
 	private String a = 					" AND ";
 	private String union = 				" UNION ALL ";
 
+
 	
-	
-	private String byId = 				"id = :id";
 	
 	private String byObjekt = 			"objekt = :objekt";
 	private String byStartDate = 		"kuuPaev >= :startDate";
 	private String byEndDate = 			"kuuPaev <= :endDate";
 	private String byTasutud = 			"tasutud = :tasutud";
+	private String byId = 				"id = :id";
 	
 }

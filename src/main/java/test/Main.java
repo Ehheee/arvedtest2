@@ -25,7 +25,7 @@ public class Main {
 		filter.setOrderBy("kuuPaev");
 		filter.setPage(2);
 		filter.setPageSize(30);
-		print(filter.getQuery(ArvedType.MUUGI));
+		print(filter.getQuery());
 	}
 	
 	/*Convert old data to new database
