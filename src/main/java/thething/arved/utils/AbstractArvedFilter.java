@@ -339,7 +339,7 @@ public class AbstractArvedFilter {
 		
 		if(t != null){
 			query = createFilterQuery(t);
-
+			this.setType(t);
 		}
 		else if(!joinLimits){
 			StringBuilder totalQuery = new StringBuilder();
@@ -351,11 +351,13 @@ public class AbstractArvedFilter {
 					totalQuery.append(union);
 				}
 			}
+			this.setTypes(ArvedType.getAllTypes());
 			query = totalQuery.toString();
 		
 		
 		}else{
 			query = createFilterQuery(null);
+			
 		}
 		fillParamSource();
 		query = query + ";";

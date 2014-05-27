@@ -15,7 +15,6 @@ import thething.arved.utils.AbstractArvedFilter.ArvedType;
 public class MigrationMapper implements RowMapper<AbstractArve> {
 
 	private Log logger = LogFactory.getLog(getClass());
-	@Override
 	public AbstractArve mapRow(ResultSet rs, int arg1) throws SQLException {
 		AbstractArve arve = null;
 		Long id = rs.getLong("id");

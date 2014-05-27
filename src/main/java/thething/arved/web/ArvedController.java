@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import thething.arved.dataobjects.AbstractArve;
 import thething.arved.utils.AbstractArvedFilter;
 import thething.arved.utils.AbstractArvedFilter.ArvedType;
+import thething.arved.utils.AbstractArvedFilter.Period;
 
 @Controller
 @RequestMapping("/")
@@ -25,6 +26,7 @@ public class ArvedController extends BaseController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String getArved(HttpServletRequest request, HttpSession session, Model model){
 		AbstractArvedFilter filter = this.processRequest(request, session);
+		filter.setPeriod(Period.CURRENTMONTH);
 		this.filterToModel(filter, model);
 	
 		
