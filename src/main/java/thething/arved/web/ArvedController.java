@@ -26,7 +26,9 @@ public class ArvedController extends BaseController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String getArved(HttpServletRequest request, HttpSession session, Model model){
 		AbstractArvedFilter filter = this.processRequest(request, session);
-		filter.setPeriod(Period.CURRENTMONTH);
+		if(filter.getPeriod() == null){
+			filter.setPeriod(Period.CURRENTMONTH);
+		}
 		this.filterToModel(filter, model);
 	
 		
@@ -96,7 +98,7 @@ public class ArvedController extends BaseController {
 		ArvedType arvedType = ArvedType.fromString(type);
 		filter.setType(arvedType);
 		filter.setObjekt(objekt);
-		this.filterToModel(filter, model);
+		this.filterToModel(filter, model, arvedType);
 		return "main";
 	}
 	

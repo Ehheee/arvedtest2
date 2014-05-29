@@ -60,13 +60,21 @@ public class AbstractArvedFilter {
 	}
 	
 	public enum Period{
-		DAY("day"), WEEK("week"), MONTH("month"), YEAR("year"), CURRENTMONTH("currentmonth"), LASTMONTH("lastmonth");
+		DAY("day", "Eilsest"), WEEK("week", "Viimased 7 päeva"), MONTH("month", "Viimased 30 päeva"), YEAR("year", "Jooksev aasta"), CURRENTMONTH("currentmonth", "jooksev kuu"), LASTMONTH("lastmonth", "eelmine kuu");
 		
 		private String identifier;
+		private String description;
 		private static List<Period> allPeriods = Arrays.asList(Period.values());
 		
-		Period(String identifier){
+		Period(String identifier, String description){
 			this.identifier = identifier;
+			this.description = description;
+		}
+		public String getIdentifier(){
+			return this.identifier;
+		}
+		public String getDescription(){
+			return this.description;
 		}
 		public static List<Period> getAllPeriods(){
 			return allPeriods;
@@ -232,8 +240,13 @@ public class AbstractArvedFilter {
 			query += a + byStartDate;
 			
 		}
+		logger.info(startDate);
+		logger.info(period);
 		if(startDate == null && period != null){
 			Calendar calendar = Calendar.getInstance();
+			calendar.set(Calendar.HOUR_OF_DAY, 0);
+			calendar.set(Calendar.MINUTE, 0);
+			calendar.set(Calendar.SECOND, 0);
 			switch(period){
 			
 				case MONTH:
@@ -252,6 +265,7 @@ public class AbstractArvedFilter {
 					break;
 					
 				case YEAR:
+					logger.info("hit here");
 					calendar.roll(Calendar.YEAR, -1);
 					startDate = calendar.getTime();
 					break;
@@ -337,9 +351,9 @@ public class AbstractArvedFilter {
 	public String getQuery(boolean joinLimits, ArvedType t){
 		String query = null;
 		
-		if(t != null){
-			query = createFilterQuery(t);
-			this.setType(t);
+		if(this.types != null && !this.types.isEmpty()){
+			query = createFilterQuery(null);
+			
 		}
 		else if(!joinLimits){
 			StringBuilder totalQuery = new StringBuilder();

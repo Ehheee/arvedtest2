@@ -60,6 +60,9 @@ input {
 	padding: 1px;
 }
 
+.filterForm{
+	margin-top: 7px;
+}
 .kuuPaev {
 	width: 88px;
 }

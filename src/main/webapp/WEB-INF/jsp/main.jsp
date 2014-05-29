@@ -2,6 +2,7 @@
 <jsp:include page="header.jsp"></jsp:include>
 <c:choose>
 	<c:when test = "${not empty arved }">
+		<jsp:include page="filter.jsp"></jsp:include>
 		<c:if test="${not empty filter.objekt }">
 			<h3>${filter.objekt }:</h3>
 			<span id = "objektKasum">

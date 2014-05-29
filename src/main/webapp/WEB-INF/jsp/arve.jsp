@@ -1,6 +1,6 @@
 <%@ include file="include.jsp"%>
 
-<form action="<c:url value='/' /> " method="post" enctype="multipart/form-data">
+<form action="<c:url value='/' /> " class = "arveForm" method="post" enctype="multipart/form-data">
               
 	<table>
 		<jsp:include page="arvedHeader.jsp"></jsp:include>

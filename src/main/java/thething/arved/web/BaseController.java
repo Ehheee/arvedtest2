@@ -83,6 +83,7 @@ public class BaseController {
 	
 	
 	protected AbstractArvedFilter processRequest(HttpServletRequest request, HttpSession session){
+		session.setAttribute("periods", Period.getAllPeriods());
 		AbstractArvedFilter filter = null;
 		Object f = session.getAttribute("arvedFilter");
 		if(f != null && f instanceof AbstractArvedFilter){
@@ -196,7 +197,7 @@ public class BaseController {
 	 * @param filter - created probably by controller or this.processRequest()
 	 * @param model
 	 */
-	protected void filterToModel(AbstractArvedFilter filter, Model model){
+	protected void filterToModel(AbstractArvedFilter filter, Model model, ArvedType t){
 		Map<ArvedType, List<AbstractArve>> arved = arvedFromDatabase.getArved(filter);
 		model.addAttribute("arved", arved);
 		List<ArvedType> types = filter.getTypes();
@@ -207,6 +208,10 @@ public class BaseController {
 			}
 		}
 		model.addAttribute("filter", filter);
+	}
+	
+	protected void filterToModel(AbstractArvedFilter filter, Model model){
+		filterToModel(filter, model, null);
 	}
 	
 	protected AbstractArve insertArve(MultipartHttpServletRequest request){

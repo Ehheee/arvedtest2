@@ -127,7 +127,7 @@ function sendArved(formSubmitUrl, formData, type,  form){
 	
 }
 function bindSubmits(){
-	$("form").submit(function (e){
+	$("form.arveForm").submit(function (e){
 		e.preventDefault();
 		form = $(this);
 		type = form.find("input[name=arvedType]").val();
