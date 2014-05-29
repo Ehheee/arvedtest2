@@ -1,6 +1,6 @@
 <%@ include file="include.jsp"%>
 
-<form action="<c:url value='/' /> " class="filterForm">
+<form class="filterForm">
 	<select name= "period">
 		<c:forEach var = "period" items = "${sessionScope.periods }">
 			<c:choose>
