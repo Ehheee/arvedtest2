@@ -130,10 +130,13 @@ public class AbstractArvedFilter {
 	public void setObjekt(String objekt) {
 		this.objekt = objekt;
 	}
-	public boolean isTasutud() {
+	public Boolean isTasutud() {
 		return tasutud;
 	}
-	public void setTasutud(boolean tasutud) {
+	public Boolean getTasutud(){
+		return tasutud;
+	}
+	public void setTasutud(Boolean tasutud) {
 		this.tasutud = tasutud;
 	}
 	public Long getId() {

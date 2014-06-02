@@ -98,7 +98,7 @@ public class ArvedController extends BaseController {
 		ArvedType arvedType = ArvedType.fromString(type);
 		filter.setType(arvedType);
 		filter.setObjekt(objekt);
-		this.filterToModel(filter, model, arvedType);
+		this.filterToModel(filter, model);
 		return "main";
 	}
 	

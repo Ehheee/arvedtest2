@@ -132,9 +132,8 @@ public class BaseController {
 		}else{
 			filter.setPage(0);
 		}
-		if(request.getParameter("tasutud") != null){
-			filter.setTasutud(Boolean.valueOf(request.getParameter("tasutud")));
-		}
+		filter.setTasutud(this.selectToBoolean(request.getParameter("tasutud")));
+		
 		
 		/*
 		 * Currently both type and objekt are set to null as filter is taken from session and may contain types and objekts set previously
@@ -197,8 +196,9 @@ public class BaseController {
 	 * @param filter - created probably by controller or this.processRequest()
 	 * @param model
 	 */
-	protected void filterToModel(AbstractArvedFilter filter, Model model, ArvedType t){
+	protected void filterToModel(AbstractArvedFilter filter, Model model){
 		Map<ArvedType, List<AbstractArve>> arved = arvedFromDatabase.getArved(filter);
+		logger.info("tasutud?" + filter.isTasutud());
 		model.addAttribute("arved", arved);
 		List<ArvedType> types = filter.getTypes();
 		model.addAttribute("includedTypes", types);
@@ -207,12 +207,11 @@ public class BaseController {
 				arved.put(type, Collections.<AbstractArve>emptyList());
 			}
 		}
+		
 		model.addAttribute("filter", filter);
 	}
 	
-	protected void filterToModel(AbstractArvedFilter filter, Model model){
-		filterToModel(filter, model, null);
-	}
+	
 	
 	protected AbstractArve insertArve(MultipartHttpServletRequest request){
 		this.printRequestparams(request.getParameterMap());
@@ -353,8 +352,20 @@ public class BaseController {
 	private Boolean checkBoxToBoolean(String text){
 		if("on".equals(text)){
 			return true;
-		}else{
+		}else if(text != null){
 			return Boolean.valueOf(text);
+		}else{
+			return false;
+		}
+	}
+	
+	private Boolean selectToBoolean(String text){
+		if("true".equals(text)){
+			return true;
+		}else if("false".equals(text)){
+			return false;
+		}else{
+			return null;
 		}
 	}
 	
