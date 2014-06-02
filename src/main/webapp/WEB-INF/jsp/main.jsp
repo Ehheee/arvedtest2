@@ -1,9 +1,6 @@
 <%@ include file="include.jsp"%>
 <jsp:include page="header.jsp"></jsp:include>
-<c:set var = "queryString" value = "?${pageContext.request.queryString}"></c:set>
-?${pageContext.request.queryString}
-<c:url value = "" var = "thisUrl" ></c:url>
-		${thisUrl }
+
 <c:choose>
 	<c:when test = "${not empty arved }">
 		<jsp:include page="filter.jsp"></jsp:include>

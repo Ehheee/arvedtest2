@@ -26,18 +26,40 @@
 		<jsp:include page="arvedTable.jsp"></jsp:include>
 		
 		<c:if test = "${filter.page gt 0}">
-			<c:url value = "" var="previousPage">
+			<c:url  var="previousPage" value = "">
+				<c:forEach items="${pageContext.request.parameterMap}" var="entry">
+    				<c:if test="${entry.key != 'page'}">
+    					<c:out value="${entry.key }"> - - </c:out> <c:out value="${entry.value }"></c:out>
+        				<c:param name="${entry.key}" value="${entry.value[0]}" />
+    				</c:if>
+
+				</c:forEach>
 				<c:param name="page" value = "${filter.page -1}"></c:param>
 			</c:url>
 			<a href = "${previousPage }" >Eelmised</a>
 		</c:if>
+		
 		<c:if test = "${arvedSize gt filter.pageSize }" >
+
+			<c:url var="nextPage" value="">
 			
+				<c:forEach items="${pageContext.request.parameterMap}" var="entry">
+    				<c:if test="${entry.key != 'page'}">
+    					<c:out value="${entry.key }"> - - </c:out> <c:out value="${entry.value }"></c:out>
+        				<c:param name="${entry.key}" value="${entry.value[0]}" />
+    				</c:if>
+
+				</c:forEach>
+				
+				<c:param name="page" value="${filter.page +1}" ></c:param>
+			</c:url>
 			
-			<c:url value = "${thisUrl + queryString }" var="nextPage">
+			<a href = "${nextPage }" >Järgmised</a>
+			<!-- 
+			<c:url value = "${thisUrl}?${pageContext.request.queryString}" var="nextPage">
 				<c:param name="page" value = "${filter.page +1}"></c:param>
 			</c:url>
-			<a href = "${nextPage }" >Järgmised</a>
+			 -->
 		</c:if>
 	</c:if>
 </c:if>
