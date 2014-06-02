@@ -4,7 +4,8 @@
 	<!--  
 		Html select based on which period is selected. Choose is used to define which one is selected.
 	-->
-	<select name= "period">
+	Ajavahemik:
+	<select class = "periodSelect" name= "period">
 		<c:forEach var = "period" items = "${sessionScope.periods }">
 			<c:choose>
 				<c:when test="${filter.period == period}">
@@ -20,34 +21,29 @@
 	<!-- 
 		Start date and end date. JS is used to recalculate those when period is selected.
 	 -->
-	<input type="text" id="filterStartDate" name="startDate" class="kuuPaev" value="<fmt:formatDate
+	 Alguskuupäev:
+	<input type="text" id="filterStartDate" name="startDate" class="filterDate" value="<fmt:formatDate
 						value='${filter.startDate}'
 						pattern='dd/MM/yyyy'
 					/>" />
-					
-	<input type="text" id="filterEndDate" name="endDate" class="kuuPaev" value="<fmt:formatDate
+	Lõppkuupäev:					
+	<input type="text" id="filterEndDate" name="endDate" class="filterDate" value="<fmt:formatDate
 						value='${filter.endDate}'
 						pattern='dd/MM/yyyy'
 					/>" />
 		
-		
+	<!-- 
+		Select only tasutud or not tasutud arved or both. Shorthand if sets selected.
+	 -->
+	 Tasutud:
 	<select name = "tasutud">
-		<option value=	"null" 	${empty filter.tasutud ? 'selected="selected"' : ''}>Mõlemad</option>
+		<option value=	"null" 	${empty filter.tasutud ? 'selected="selected"' : ''}>Jah+Ei</option>
 		<option value = "false"	${(not filter.tasutud && not empty filter.tasutud) ? 'selected="selected"' : ''}>Ei</option>
 		<option value = "true" 	${filter.tasutud ? 'selected="selected"' : ''}>Jah</option>
 	
 	</select>
 					
-					<!-- 
-	<c:choose>
-		<c:when test="${filter.tasutud }">
-			<input type="checkbox" name="tasutud" checked="checked" />
-		</c:when>
-		<c:otherwise>
-			<input type="checkbox" name="tasutud" />
-		</c:otherwise>
-	</c:choose>
-	 -->
-	<input type="submit" value="saada" />
+
+	<input type="submit" value="filtreeri" />
 	
 </form>

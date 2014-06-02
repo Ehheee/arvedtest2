@@ -24,6 +24,7 @@
 		
 		
 		<jsp:include page="arvedTable.jsp"></jsp:include>
+		
 		<c:if test = "${filter.page gt 0}">
 			<c:url value = "" var="previousPage">
 				<c:param name="page" value = "${filter.page -1}"></c:param>
@@ -33,7 +34,7 @@
 		<c:if test = "${arvedSize gt filter.pageSize }" >
 			
 			
-			<c:url value = "" var="nextPage">
+			<c:url value = "${thisUrl + queryString }" var="nextPage">
 				<c:param name="page" value = "${filter.page +1}"></c:param>
 			</c:url>
 			<a href = "${nextPage }" >Järgmised</a>

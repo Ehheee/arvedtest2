@@ -1,6 +1,17 @@
+function initializeFilter(){
+	$(".filterDate").each(function(){
+		$(this).AnyTime_picker({format: "%d/%m/%Y"});
+		
+	});
+	$(".periodSelect").on("input propertychange, change", function(){
+		$(".filterDate").val("");
+	});
+}
+
 function bindDatePickers(){
 	$(".kuuPaev").each(function(){
 		$(this).AnyTime_picker({format: "%d/%m/%Y"});
+		
 	});
 }
 function bindDatePicker(toBind){

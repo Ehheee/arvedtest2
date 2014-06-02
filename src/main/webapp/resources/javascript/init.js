@@ -1,4 +1,5 @@
 $(document).ready(function(){
+	initializeFilter();
 	if(admin){
 		bindDeleteButtons();
 		bindDatePickers();
@@ -9,5 +10,6 @@ $(document).ready(function(){
 	}else{
 		
 	}
+	
 	
 });

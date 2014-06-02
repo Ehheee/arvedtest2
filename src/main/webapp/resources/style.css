@@ -60,6 +60,10 @@ input {
 	padding: 1px;
 }
 
+input.filterDate {
+	border: 1px solid black;
+	width: 88px;
+}
 .filterForm{
 	margin-top: 7px;
 }
