@@ -16,11 +16,14 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
+import java.math.BigDecimal;
 import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import thething.arved.dataobjects.AbstractArve;
 import thething.arved.utils.AbstractArvedExtractor;
@@ -98,6 +101,16 @@ public class ArvedFromDatabase {
 			objektid.add(rs.getString("objekt"));
 		}
 		return objektid;
+	}
+	public Map<ArvedType, BigDecimal> getTotalSummaIlmaKM(AbstractArvedFilter filter){
+		Map<ArvedType, BigDecimal>  summad = new HashMap<ArvedType, BigDecimal>();
+		SqlRowSet rs = this.namedParameterJdbcTemplate.queryForRowSet(filter.getSumQuery(), filter.getParamSource());
+		while(rs.next()){
+			ArvedType type = ArvedType.fromString(rs.getString("type"));
+			summad.put(type, rs.getBigDecimal("sum"));
+		}
+		return summad;
+		
 	}
 	
 	private BasicDataSource dataSource;

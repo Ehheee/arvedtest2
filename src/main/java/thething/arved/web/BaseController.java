@@ -211,6 +211,10 @@ public class BaseController {
 		model.addAttribute("filter", filter);
 	}
 	
+	protected void calculateKasum(AbstractArvedFilter filter){
+		Map<ArvedType, BigDecimal> summad = arvedFromDatabase.getTotalSummaIlmaKM(filter);
+		BigDecimal kasum = summad.get(ArvedType.MUUGI) 
+	}
 	
 	
 	protected AbstractArve insertArve(MultipartHttpServletRequest request){
@@ -287,26 +291,6 @@ public class BaseController {
 		
 		return arve;
 	}
-	/*
-	
-	protected void setDefaultDates(HttpSession session){
-		Calendar calendar =  Calendar.getInstance();
-		if(session.getAttribute("endDate") == null){
-			logger.info("set default endDate: " + calendar.getTime());
-			session.setAttribute("endDate", calendar.getTime());
-		}
-		if(session.getAttribute("startDate") == null){
-			logger.debug("startDate before roll: " + calendar);
-			calendar.roll(Calendar.YEAR, -1);
-			logger.debug("startDate after roll: " + calendar);
-			session.setAttribute(" set default startDate", calendar.getTime());
-		}
-		
-	}
-	*/
-		
-	
-	
 	
 	
 	protected String saveFile(MultipartHttpServletRequest request, ArvedType arvedType) {

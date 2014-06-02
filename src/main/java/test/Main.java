@@ -20,12 +20,26 @@ public class Main {
 	
 	public static void main(String[] args){
 		AbstractArvedFilter filter = new AbstractArvedFilter();
-		filter.setObjekt("ob");
+		filter.setObjekt("hooldus");
 		filter.setPeriod(Period.CURRENTMONTH);
 		filter.setOrderBy("kuuPaev");
 		filter.setPage(2);
 		filter.setPageSize(30);
-		print(filter.getQuery());
+		filter.getQuery();
+		print(filter.getSumQuery());
+		BasicDataSource ds2 = new BasicDataSource();
+		ds2.setDriverClassName("com.mysql.jdbc.Driver");
+		ds2.setUsername("arvedtest2");
+		ds2.setPassword("f4k390fkf9");
+		ds2.setUrl("jdbc:mysql://localhost:3306/arvedtest2?useUnicode=true&amp;characterEncoding=utf8");
+		ds2.setMaxActive(10);
+		ds2.setMaxIdle(5);
+		ds2.setInitialSize(5);
+		ds2.setValidationQuery("SELECT 1");
+		ArvedFromDatabase afd = new ArvedFromDatabase();
+		afd.setDataSource(ds2);
+		print(afd.getTotalSummaIlmaKM(filter).get(ArvedType.OSTU));
+		
 	}
 	
 	/*Convert old data to new database

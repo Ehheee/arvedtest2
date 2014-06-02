@@ -196,6 +196,12 @@ public class AbstractArvedFilter {
 	public void setParamSource(MapSqlParameterSource paramSource) {
 		this.paramSource = paramSource;
 	}
+	
+	/**
+	 * 
+	 * @param type if type is set then only type query is created. Otherwise type in (:types) is used
+	 * @return
+	 */
 	private String createBaseQuery(ArvedType type){
 		String query = null;
 		if(this.paramSource == null){
@@ -224,8 +230,13 @@ public class AbstractArvedFilter {
 		return query;
 		
 	}
-	
-	private String createFilterQuery(ArvedType type){
+	/**
+	 * 
+	 * @param type only creates query for given type
+	 * @param sumQuery sumQuery is used to leave out ordering and limits when selecting sums
+	 * @return
+	 */
+	private String createFilterQuery(ArvedType type, boolean sumQuery){
 		String query = createBaseQuery(type);
 		
 		if(id != null){
@@ -350,18 +361,27 @@ public class AbstractArvedFilter {
 		return getQuery(joinLimits, null);
 	}
 	
+	/**
+	 * It is assumed that this is always used after creating a real query so there is no need to fill bindParams here,
+	 * It is also assumed that this method is only used when objekt is set.
+	 * @return
+	 */
+	public String getSumQuery(){
+		String query = selectSummas + a + byObjekt + groupByType;
+		return query;
+	}
 	
 	public String getQuery(boolean joinLimits, ArvedType t){
 		String query = null;
 		
 		if(this.types != null && !this.types.isEmpty()){
-			query = createFilterQuery(null);
+			query = createFilterQuery(null, false);
 			
 		}
 		else if(!joinLimits){
 			StringBuilder totalQuery = new StringBuilder();
 			for(ArvedType type: ArvedType.getAllTypes()){
-				String subQuery = createFilterQuery(type);
+				String subQuery = createFilterQuery(type, false);
 				subQuery = "(" + subQuery + ")";
 				totalQuery.append(subQuery);
 				if(ArvedType.getAllTypes().indexOf(type) < ArvedType.getAllTypes().size() - 1){
@@ -373,7 +393,7 @@ public class AbstractArvedFilter {
 		
 		
 		}else{
-			query = createFilterQuery(null);
+			query = createFilterQuery(null, false);
 			
 		}
 		fillParamSource();
@@ -411,6 +431,8 @@ public class AbstractArvedFilter {
 
 	private String selectArved = 		"select * from arved where type in (:types)";
 	private String selectArvedByType = 	"select * from arved where type = ";
+	private String selectSummas = "select sum(summaIlmaKM) as sum, type from arved where type in(:types)";
+	private String groupByType = " group by type";
 	
 	
 	private String a = 					" AND ";
