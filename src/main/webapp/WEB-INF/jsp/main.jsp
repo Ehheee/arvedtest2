@@ -4,12 +4,19 @@
 <c:choose>
 	<c:when test = "${not empty arved }">
 		<jsp:include page="filter.jsp"></jsp:include>
+		
 		<c:if test="${not empty filter.objekt }">
+			
 			<h3>${filter.objekt }:</h3>
+			<c:if test = "${not empty objektKasum }">
+				Objekti kasum: ${objektKasum}
+			</c:if>
+			<br/>
 			<span id = "objektKasum">
 				
 			</span>
 		</c:if>
+		
 		<c:forEach var = "type" items = "${includedTypes }">
 			<c:set var= "type" value = "${type}" scope = "request"></c:set>
 			<jsp:include page = "arved.jsp"></jsp:include>

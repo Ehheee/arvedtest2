@@ -91,6 +91,7 @@ public class BaseController {
 		}else{
 			filter = new AbstractArvedFilter();
 		}
+		this.printRequestparams(request.getParameterMap());
 		filter = filterFromRequest(request, filter);
 		this.setDefaults(filter);
 		session.setAttribute("arvedFilter", filter);
@@ -124,9 +125,25 @@ public class BaseController {
 		}
 		
 		this.setOrder(filter, request);
-		filter.setPeriod(Period.fromString(request.getParameter("period")));
+		
+		Period period = Period.fromString(request.getParameter("period"));
+		//sending 'null' as period will clear period otherwise it is kept in filter
+		if(period != null){
+			filter.setPeriod(period);
+		}else if("null".equals(request.getParameter("period"))){
+			filter.setPeriod(null);
+		}
 		logger.info("Period: " + filter.getPeriod());
 		
+		Integer pageSize = null;
+		try{
+			pageSize = Integer.valueOf(request.getParameter("pageSize"));
+		}catch(Exception e){
+			logger.debug(request.getParameter("pageSize"));
+		}
+		if(pageSize != null){
+			filter.setPageSize(pageSize);
+		}
 		if(request.getParameter("page") != null){
 			filter.setPage(Integer.valueOf(request.getParameter("page")));
 		}else{
@@ -209,11 +226,24 @@ public class BaseController {
 		}
 		
 		model.addAttribute("filter", filter);
+		if(filter.getObjekt() != null){
+			this.calculateKasum(filter, model);
+		}
 	}
 	
-	protected void calculateKasum(AbstractArvedFilter filter){
+	protected void calculateKasum(AbstractArvedFilter filter, Model model){
 		Map<ArvedType, BigDecimal> summad = arvedFromDatabase.getTotalSummaIlmaKM(filter);
-		BigDecimal kasum = summad.get(ArvedType.MUUGI) 
+		BigDecimal muugi = summad.get(ArvedType.MUUGI);
+		BigDecimal ostu = summad.get(ArvedType.OSTU);
+		if(muugi == null ){
+			muugi = new BigDecimal(0);
+		}
+		if(ostu == null){
+			ostu = new BigDecimal(0);
+		}
+		
+		BigDecimal kasum = muugi.subtract(ostu);
+		model.addAttribute("objektKasum", kasum);
 	}
 	
 	

@@ -42,11 +42,12 @@ function recalculateKasum(){
 		ostuSumma = 0;
 	}
 	var kasum = muugiSumma - ostuSumma;
+	kasum = kasum.toFixed(2);
 	console.log(muugiSumma);
 	console.log(ostuSumma);
 	console.log(kasum);
 	if(!isNaN(kasum)){
-		$("span#objektKasum").text("Kasum: " + kasum);
+		$("span#objektKasum").text("Kasum üle nähtavate arvete: " + kasum);
 		
 	}
 	

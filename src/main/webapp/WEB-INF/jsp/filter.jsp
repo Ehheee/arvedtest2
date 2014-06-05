@@ -6,16 +6,19 @@
 	-->
 	Ajavahemik:
 	<select class = "periodSelect" name= "period">
+		<option value="null"  ${empty filter.period ? 'selected="selected"' : ''}></option>
 		<c:forEach var = "period" items = "${sessionScope.periods }">
 			<c:choose>
 				<c:when test="${filter.period == period}">
 					<option selected = "selected" value = "${period.identifier }">${period.description }</option>
 				</c:when>
+
 				<c:otherwise>
 					<option value = "${period.identifier }">${period.description }</option>
 				</c:otherwise>
 			</c:choose>
 		</c:forEach>
+		
 	</select>
 	
 	<!-- 
@@ -42,8 +45,14 @@
 		<option value = "true" 	${filter.tasutud ? 'selected="selected"' : ''}>Jah</option>
 	
 	</select>
-					
-
+	Näita 
+	<select name = "pageSize">
+		<option value = "50" ${filter.pageSize == 50 ? 'selected="selected"' : '' } >50 arvet</option>
+		<option value = "100" ${filter.pageSize == 100 ? 'selected="selected"' : '' } >100 arvet</option>
+		<option value = "250" ${filter.pageSize == 250 ? 'selected="selected"' : '' } >250 arvet</option>
+		<option value = "100000" ${filter.pageSize == 100000 ? 'selected="selected"' : ''} >Kõik arved</option>
+	</select>	
+	 
 	<input type="submit" value="filtreeri" />
 	
 </form>
