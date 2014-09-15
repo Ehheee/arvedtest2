@@ -6,7 +6,6 @@ import org.springframework.security.core.GrantedAuthority;
 
 import thething.arved.dataobjects.ArvedUser;
 
-
 public class SecurityUser extends org.springframework.security.core.userdetails.User {
 	
 	private ArvedUser user;

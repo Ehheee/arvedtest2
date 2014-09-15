@@ -19,8 +19,19 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
+/**
+ * This the main utility class. Used by controllers so that filtering invoices from controller side would be easy and also easily understandable when reading code
+ * This class creates the necessary queries after filter properties have been set by controller.
+ * @author Kaur
+ *
+ */
 public class AbstractArvedFilter {
 	
+	/**
+	 * Enum used to identify invoice type. Also contains display names as only 1 language will ever be used.
+	 * @author Kaur
+	 *
+	 */
 	public enum ArvedType{
 		MUUGI("m", "Müügi"), OSTU("o", "Ostu");
 		
@@ -59,6 +70,12 @@ public class AbstractArvedFilter {
 		}
 	}
 	
+	/**
+	 * Enum used to represents the periods over which to return invoices. 
+	 * As only 1 language is and will be used, then display names are also defined here - this makes it easy to show them using jsp pages
+	 * @author Kaur
+	 *
+	 */
 	public enum Period{
 		DAY("day", "Eilsest"), WEEK("week", "Viimased 7 päeva"), MONTH("month", "Viimased 30 päeva"), YEAR("year", "Jooksev aasta"), CURRENTMONTH("currentmonth", "jooksev kuu"), LASTMONTH("lastmonth", "eelmine kuu");
 		

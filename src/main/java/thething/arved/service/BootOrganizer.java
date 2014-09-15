@@ -9,7 +9,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import thething.arved.dao.ArvedUserDao;
 import thething.arved.dataobjects.ArvedUser;
-
+/**
+ * Was used to crypt passwords after inserting test data to database. Now pretty much rudimentary.
+ * @author Kaur
+ *
+ */
 public class BootOrganizer {
 
 	public void secureDatabase(){

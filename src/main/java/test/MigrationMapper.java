@@ -11,7 +11,11 @@ import org.springframework.jdbc.core.RowMapper;
 
 import thething.arved.dataobjects.AbstractArve;
 import thething.arved.utils.AbstractArvedFilter.ArvedType;
-
+/**
+ * Mapper to migrate data from old version. 
+ * @author Kaur
+ *
+ */
 public class MigrationMapper implements RowMapper<AbstractArve> {
 
 	private Log logger = LogFactory.getLog(getClass());

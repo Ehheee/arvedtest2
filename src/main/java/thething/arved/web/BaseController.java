@@ -127,7 +127,7 @@ public class BaseController {
 		this.setOrder(filter, request);
 		
 		Period period = Period.fromString(request.getParameter("period"));
-		//sending 'null' as period will clear period otherwise it is kept in filter
+		//sending 'null' as period will clear period otherwise it is kept in filter. 
 		if(period != null){
 			filter.setPeriod(period);
 		}else if("null".equals(request.getParameter("period"))){
@@ -179,7 +179,10 @@ public class BaseController {
 		}
 		
 	}
-	
+	/**
+	 * Sets the default values for filter so that the query wouldn't return too much invoices if no filters are set from client side.
+	 * @param filter
+	 */
 	public void setDefaults(AbstractArvedFilter filter){
 		SecurityUser securityUser = (SecurityUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		ArvedUser user = securityUser.getUser();
@@ -203,14 +206,14 @@ public class BaseController {
 	
 	
 	/**
-	 * Requests DAO for arved by filter and attaches them to given model.
+	 * Requests DAO for invoices by filter and attaches them to given model.
 	 * If filter has set some types but type is not returned from database
 	 * because filter didn't match anything then we still have to add possibility
-	 * to insert new entry from jsp. In order for jsp to not throw error on checking 
+	 * to insert new entry for this type from jsp. In order for jsp to not throw error on checking 
 	 * list size then an empty list is added.
 	 * 
 	 * 
-	 * @param filter - created probably by controller or this.processRequest()
+	 * @param filter
 	 * @param model
 	 */
 	protected void filterToModel(AbstractArvedFilter filter, Model model){
@@ -227,10 +230,15 @@ public class BaseController {
 		
 		model.addAttribute("filter", filter);
 		if(filter.getObjekt() != null){
-			this.calculateKasum(filter, model);
+			this.calculateKasum(filter, model);					//Profit calculated if project is set in filter
 		}
 	}
 	
+	/**
+	 * Calculates profit for current filter.
+	 * @param filter
+	 * @param model
+	 */
 	protected void calculateKasum(AbstractArvedFilter filter, Model model){
 		Map<ArvedType, BigDecimal> summad = arvedFromDatabase.getTotalSummaIlmaKM(filter);
 		BigDecimal muugi = summad.get(ArvedType.MUUGI);
@@ -322,7 +330,12 @@ public class BaseController {
 		return arve;
 	}
 	
-	
+	/**
+	 * Saves pdf from MultipartHttpServletRequest. Files are sorted into 2 folders by their type.
+	 * @param request
+	 * @param arvedType
+	 * @return
+	 */
 	protected String saveFile(MultipartHttpServletRequest request, ArvedType arvedType) {
 		String pdfLocation = null;
 		try{
@@ -363,6 +376,11 @@ public class BaseController {
 		}
 	}
 	
+	
+	/*
+	 * Below methods used to convert form elements into booleans. When searching for a solution to this I couldn't find a more straightforwar and 'pretty' way of doing it.
+	 * Also it wasn't hard or timeconsuming to implement it this way
+	 */
 	private Boolean checkBoxToBoolean(String text){
 		if("on".equals(text)){
 			return true;

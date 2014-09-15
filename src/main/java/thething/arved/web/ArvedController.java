@@ -1,7 +1,9 @@
 package thething.arved.web;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -23,6 +25,13 @@ import thething.arved.utils.AbstractArvedFilter.Period;
 @RequestMapping("/")
 public class ArvedController extends BaseController {
 
+	/**
+	 * The general controller method for returning invoices by request parameters.
+	 * @param request
+	 * @param session
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public String getArved(HttpServletRequest request, HttpSession session, Model model){
 		AbstractArvedFilter filter = this.processRequest(request, session);
@@ -34,7 +43,12 @@ public class ArvedController extends BaseController {
 		
 		return "main";
 	}
-	
+	/**
+	 * Url for returning the form of a new invoice. Used only when JavaScript is not available.
+	 * @param model
+	 * @param s
+	 * @return
+	 */
 	@RequestMapping(value = "/arve/{s:[a-zA-Z]+}", method = RequestMethod.GET)
 	public String newArve(Model model, @PathVariable("s") String s){
 		model.addAttribute("type", ArvedType.fromString(s));
@@ -42,7 +56,12 @@ public class ArvedController extends BaseController {
 		return "main";
 	}
 	
-	
+	/**
+	 * Returns a specific invoice if only numbers used in url after /arve/
+	 * @param id
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value = "/arve/{id:[0-9]+}", method = RequestMethod.GET)
 	public String getArve(@PathVariable("id") Long id, Model model){
 		AbstractArve arve = arvedFromDatabase.getArve(id);
@@ -52,16 +71,29 @@ public class ArvedController extends BaseController {
 		return "main";
 	}
 	
+	/**
+	 * Just a controller method used to test solutions in jsp pages.
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public String test(Model model){
+		Map<String, Integer> testMap = new TreeMap<String, Integer>();
+		testMap.put("first", 5);
+		testMap.put("second", 3);
+		testMap.put("third", 1);
+		List<String> roles = new ArrayList<String>();
+		roles.add("ROLE_USER");
+		roles.add("ROLE_USER2");
+		roles.add("ROLE_ADMIN");
 		model.addAttribute("includedTypes", ArvedType.values());
 		model.addAttribute("jspContent", "test.jsp");
-		return "main";
+		model.addAttribute("testMap",testMap);
+		return "test";
 	}
 	
 	@RequestMapping(value = "/{type}", method = RequestMethod.GET)
 	public String getArvedByType(@PathVariable("type") String type, HttpServletRequest request, HttpSession session, Model model){
-		logger.info("hit2???");
 		AbstractArvedFilter filter = this.processRequest(request, session);
 		ArvedType arvedType = ArvedType.fromString(type);
 		filter.setType(arvedType);
@@ -69,13 +101,22 @@ public class ArvedController extends BaseController {
 		return "main";
 	}
 	
+	
 	@RequestMapping(value = "/ob", method = RequestMethod.GET)
 	public String getObjektid(Model model){
 		model.addAttribute("objektid", arvedFromDatabase.getObjektid());
 		
 		return "main";
 	}
-	
+	/**
+	 * Returns invoices by requested project.
+	 * @param objekt
+	 * @param request
+	 * @param session
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/ob/{objekt}", method = RequestMethod.GET)
 	public String getArvedByObjekt(@PathVariable("objekt") String objekt, HttpServletRequest request, HttpSession session, Model model) throws Exception{
 		logger.info("Requested objekt: " + objekt);
@@ -91,6 +132,15 @@ public class ArvedController extends BaseController {
 		return "main";
 	}
 	
+	/**
+	 * Returns only one type of invoices for requested project.
+	 * @param objekt
+	 * @param type
+	 * @param request
+	 * @param session
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value = "/ob/{objekt}/{type}", method = RequestMethod.GET)
 	public String getArvedByObjektAndType(@PathVariable("objekt") String objekt, @PathVariable("type") String type, HttpServletRequest request, HttpSession session, Model model){
 		
@@ -110,6 +160,13 @@ public class ArvedController extends BaseController {
 		return String.valueOf(id);
 	}
 	
+	/**
+	 * Post controller for adding new invoices. Different view is returned when javascript is used. 
+	 * for javascript only the new row is returned. Without javascript user is redirected back to the invoice that was just added.
+	 * @param request
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(method = RequestMethod.POST)
 	public String saveArve(MultipartHttpServletRequest request, Model model){
 		AbstractArve arve = this.insertArve(request);

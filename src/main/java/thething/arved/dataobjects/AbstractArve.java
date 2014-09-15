@@ -4,21 +4,26 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import thething.arved.utils.AbstractArvedFilter.ArvedType;
-
+/**
+ * Arve means invoice in English. Done as a very small project so made the stupid decision of using Estonian in some places of the code.
+ * This class represents 2 types of invoices. One for incoming(money coming into the company) and the second for outgoing(money going out of the company)
+ * @author Kaur
+ *
+ */
 public class AbstractArve implements Comparable<AbstractArve>{
 
 	private long id;
-	private String  objekt;
-	private String arveNumber;
-	private Date kuuPaev;
-	private BigDecimal summaIlmaKM;
-	private BigDecimal summaKM;
-	private boolean tasutud;
-	private String pdfLocation;
-	private String muugiMees;				//ainult M��GI
-	private String klient;					//ainult M��GI
-	private String tarnija;					//ainult OSTU
-	private ArvedType type;
+	private String  objekt;					//Represents the project that this invoice is related to
+	private String arveNumber;				//Identifier of this invoice in bookkeeping systems
+	private Date kuuPaev;					//Date of invoice
+	private BigDecimal summaIlmaKM;			//Value of invoice without VAT
+	private BigDecimal summaKM;				//Value of invoice with VAT
+	private boolean tasutud;				//Whether the invoice is completed(money has been transferred between respective accounts)
+	private String pdfLocation;				//Location of pdf on filesystem
+	private String muugiMees;				//only MÜÜGI
+	private String klient;					//only MÜÜGI
+	private String tarnija;					//only OSTU
+	private ArvedType type;					//Indicates if current invoice is incoming or outgoing
 	
 	/*
 	 create table arvedtest2.arved (
@@ -63,8 +68,8 @@ public class AbstractArve implements Comparable<AbstractArve>{
 	}
 	
 	public AbstractArve() {
-		// TODO Auto-generated constructor stub
 	}
+	
 	public void setType(ArvedType type) {
 		this.type = type;
 	}
@@ -137,6 +142,12 @@ public class AbstractArve implements Comparable<AbstractArve>{
 	public void setTarnija(String tarnija) {
 		this.tarnija = tarnija;
 	}
+	
+	
+	
+	/**
+	 * Custom toString used for logging and debugging purposes
+	 */
 	public String toString(){
 		
 		return "Arve: id= " + id + "; type= " + type + "; arveNumber= " + arveNumber + "; objekt= " + objekt + "; kuuPaev= " + kuuPaev +

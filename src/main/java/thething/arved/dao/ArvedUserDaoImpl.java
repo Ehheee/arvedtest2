@@ -45,6 +45,9 @@ public class ArvedUserDaoImpl implements ArvedUserDao {
     	return this.jdbcTemplate.query(Select_ArvedUser_By_id, arvedUserMapper, id).get(0);
     }
     public ArvedUser selectByUserName(String userName){
+    	logger.info(userName);
+    	logger.info(Select_ArvedUser_By_userName);
+    	logger.info(this.jdbcTemplate.query(Select_ArvedUser_By_userName, arvedUserMapper, userName).get(0));
     	return this.jdbcTemplate.query(Select_ArvedUser_By_userName, arvedUserMapper, userName).get(0);
     }
     

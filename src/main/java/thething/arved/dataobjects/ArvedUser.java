@@ -2,7 +2,13 @@ package thething.arved.dataobjects;
 
 import java.io.Serializable;
 
-
+/**
+ * 'Business' class representing the users of this applications. Uses password encryption from previous version(SHA).
+ * Currently Bcrypt should be used for encrypting passwords, but this is not really open to world application and only has a few users
+ * and not too much activity so probably not a target for hackers.
+ * @author Kaur
+ *
+ */
 public class ArvedUser implements Serializable{
 
 	private long id;
@@ -31,7 +37,7 @@ public class ArvedUser implements Serializable{
     	
     	insert into arvedtest2.arvedUsers 
     	(userName, fullName, password, salt, enabled, privilege, pageSize, defaultSort) values 
-    	('kasutaja', 'Kaur', 'kalasaba', '0', true, 'ROLE_USER', 30, 'kuuPaev' );
+    	('admin', 'Kaur', 'bdf5433cac30e637b04b5e88107b26cd8222f3d2', '614497.5535472096', true, 'ROLE_USER', 30, 'kuuPaev' );
       
      */
     

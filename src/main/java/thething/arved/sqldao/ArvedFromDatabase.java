@@ -1,7 +1,9 @@
 package thething.arved.sqldao;
 
 
-
+/**
+ * 
+ */
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp.BasicDataSource;
@@ -42,11 +44,17 @@ public class ArvedFromDatabase {
 
 	
 	protected Log logger = LogFactory.getLog(getClass());
-	SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+	SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");				//Time is not necessary in this simple application. Date is enough.
 
 	private AbstractArvedMapper abstractArvedMapper = new AbstractArvedMapper();
 	private AbstractArvedExtractor extractor = new AbstractArvedExtractor();
 	
+	/**
+	 * Uses filter to create query and executes it on the database.
+	 * Returns map by invoice type as this is the datastructure that seemed most suitable when designing jsp files.
+	 * @param filter
+	 * @return
+	 */
 	public Map<ArvedType, List<AbstractArve>> getArved(AbstractArvedFilter filter){
 		Map<ArvedType, List<AbstractArve>> arved = null;
 		String query = filter.getQuery();
@@ -57,6 +65,7 @@ public class ArvedFromDatabase {
 		logger.info("Returned arved: " + arved.size());
 		return arved;
 	}
+	
 	
 	public AbstractArve getArve(Long id){
 		AbstractArvedFilter filter = new AbstractArvedFilter();
@@ -93,7 +102,10 @@ public class ArvedFromDatabase {
 		}
 		return i;
 	}
-	
+	/**
+	 * Returns list of current projects. This list will never be too long so currently no need for pagination
+	 * @return
+	 */
 	public List<String> getObjektid(){
 		List<String> objektid = new ArrayList<String>();
 		SqlRowSet rs = this.jdbcTemplate.queryForRowSet(Select_Objektid);
@@ -102,6 +114,12 @@ public class ArvedFromDatabase {
 		}
 		return objektid;
 	}
+	
+	/**
+	 * Calculates the sum of invoices over the ones currently visible as defined in filter.
+	 * @param filter
+	 * @return
+	 */
 	public Map<ArvedType, BigDecimal> getTotalSummaIlmaKM(AbstractArvedFilter filter){
 		Map<ArvedType, BigDecimal>  summad = new HashMap<ArvedType, BigDecimal>();
 		SqlRowSet rs = this.namedParameterJdbcTemplate.queryForRowSet(filter.getSumQuery(), filter.getParamSource());
